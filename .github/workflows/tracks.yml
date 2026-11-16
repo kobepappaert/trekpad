@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '17 3 1 * *'   # first day of each month
   push:
-    paths: ['js/routes.js', 'scripts/build-tracks.mjs']
+    paths: ['js/routes.js', 'scripts/build-tracks.mjs', '.github/workflows/tracks.yml']
 permissions:
   contents: write
 concurrency: tracks
@@ -22,4 +22,5 @@ jobs:
           git config user.email "hello@vandra.app"
           git add data/tracks
           git diff --cached --quiet || git commit -m "Update tracks and places to sleep"
+          git pull --rebase origin main
           git push
