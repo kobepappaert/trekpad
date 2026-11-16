@@ -125,6 +125,7 @@ function go(v){
   window.scrollTo(0,0);
   if(v==='map')setTimeout(()=>{bigMap();mapObj&&mapObj.invalidateSize()},30);
   if(v==='home')renderList();
+  if(v==='detail')setTimeout(()=>dMap&&dMap.invalidateSize(),50);
 }
 function renderModes(){
   $('#modes').innerHTML=MODE_IDS.map(m=>`<button class="mode ${S.mode===m?'on':''}" data-m="${m}"><b>${T.modes[m][0]}</b><small>${T.modes[m][1]}</small></button>`).join('');
@@ -159,7 +160,7 @@ function renderList(){
 
 /* ---------- detail ---------- */
 let current=null;
-function openRoute(id){current=ROUTES.find(r=>r.id===id);renderDetail();go('detail')}
+function openRoute(id){current=ROUTES.find(r=>r.id===id);go('detail');renderDetail();setTimeout(()=>dMap&&dMap.invalidateSize(),50)}
 function renderDetail(){
   const r=current,m=S.month,c=cost(r),a=advice(r,m),f=access(r),km=distKm(r),away=awayDays(r);
   $('#v-detail').innerHTML=`
@@ -295,13 +296,13 @@ async function loadTrack(r){
     if(!data){
       const d=1.6,bbox=`${r.lat-d},${r.lon-d*1.6},${r.lat+d},${r.lon+d*1.6}`;
       let q;
-      if(r.osm){q=`[out:json][timeout:50];rel["route"="hiking"]["name"~"${r.osm}"](${bbox})->.r;(.r;rel(r.r);)->.rr;way(r.rr)(${bbox})->.w;(.w;node(around.w:1500)${POI_FILTER};);out geom;`}
-      else{const pts=r.stages.map(p=>p.join(',')).join(',');q=`[out:json][timeout:40];node(around:2500,${pts})${POI_FILTER};out;`}
+      if(r.osm){q=`[out:json][timeout:50];rel["route"="hiking"]["name"~"${r.osm}"](${bbox})->.r;(.r;rel(r.r);)->.rr;way(r.rr)(${bbox})->.w;.w out geom;nwr(around.w:1500)${POI_FILTER};out center;`}
+      else{const pts=r.stages.map(p=>p.join(',')).join(',');q=`[out:json][timeout:40];nwr(around:2500,${pts})${POI_FILTER};out center;`}
       const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)});
       if(!res.ok)throw new Error(res.status);
       const j=await res.json();
-      let ways=j.elements.filter(e=>e.type==='way'&&e.geometry).map(w=>w.geometry.map(p=>[p.lat,p.lon]));
-      const pois=j.elements.filter(e=>e.type==='node'&&e.tags).map(n=>({lat:n.lat,lon:n.lon,kind:SLEEP_TAGS[n.tags.tourism]||['bed','Slaapplek'],name:n.tags.name||'',tags:n.tags}));
+      let ways=j.elements.filter(e=>e.type==='way'&&e.geometry&&!(e.tags&&e.tags.tourism)).map(w=>w.geometry.map(p=>[p.lat,p.lon]));
+      const pois=j.elements.filter(e=>e.tags&&e.tags.tourism).map(n=>{const c=n.center||n;return{lat:c.lat,lon:c.lon,kind:SLEEP_TAGS[n.tags.tourism]||['bed','Slaapplek'],name:n.tags.name||'',tags:n.tags}}).filter(p=>p.lat);
       const fromOsm=ways.length>0;
       if(!fromOsm){if(!r.stages)throw new Error('leeg');ways=[r.stages]}
       data=trackCache[r.id]={ways,pois,fromOsm};
