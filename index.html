@@ -3,626 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Trekpad – trektochten in Europa</title>
-<meta name="theme-color" content="#2f6b4f">
+<title>Trekpad – trektochten in Europa, met of zonder auto</title>
+<meta name="description" content="Vind een meerdaagse trektocht in Europa die bij jou past: zonder auto, met eigen auto of met het vliegtuig. Met kosten, slaapplekken, weer en kledingadvies.">
+<meta name="theme-color" content="#1f4332">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Trekpad">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎒</text></svg>">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>
-  #map{height:260px;border-radius:var(--radius);margin-bottom:12px;box-shadow:var(--shadow);z-index:0}
-  #dmap{height:220px;border-radius:12px;margin-top:10px;z-index:0}
-  .leaflet-container{font:inherit}
-  .safe{font-size:14px;line-height:1.5}
-  .safe ol{padding-left:20px;margin:6px 0}
-  .photos{display:flex;gap:8px;overflow-x:auto;margin-top:8px}
-  .photos div{flex:0 0 160px;height:110px;border-radius:10px;background:var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px}
-  .live{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0}
-  .live div{background:var(--bg);border-radius:8px;padding:6px 2px;text-align:center;font-size:11px}
-  .live b{display:block;font-size:13px} .live small{color:var(--muted)}
-  .live .em{font-size:18px;display:block}
-  :root{
-    --bg:#f4f1ea; --card:#ffffff; --ink:#1f2a24; --muted:#6b7570; --line:#e3ded2;
-    --green:#2f6b4f; --green-soft:#dcebe2; --amber:#b7791f; --amber-soft:#f7ebd3;
-    --red:#b23a3a; --red-soft:#f6dede; --blue:#2b5f8a; --blue-soft:#dbe8f3;
-    --radius:14px; --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05);
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-  body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-  header{position:sticky;top:0;z-index:5;background:var(--green);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-  header h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.2px;flex:1}
-  header button{background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:10px;padding:8px 10px;font-size:14px}
-  main{max-width:720px;margin:0 auto;padding:14px 14px 90px}
-  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
-  h2{font-size:15px;margin:0 0 10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
-  h3{margin:0;font-size:18px}
-  .modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .mode{border:2px solid var(--line);border-radius:12px;padding:10px;background:#fff;text-align:left;font-size:14px;line-height:1.25;cursor:pointer}
-  .mode .ic{font-size:20px;display:block;margin-bottom:4px}
-  .mode.on{border-color:var(--green);background:var(--green-soft)}
-  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  select,input[type=number],input[type=text]{font:inherit;font-size:15px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-width:0}
-  label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);flex:1;min-width:120px}
-  .chips{display:flex;gap:6px;flex-wrap:wrap}
-  .chip{font-size:12px;padding:4px 9px;border-radius:999px;background:var(--line);color:var(--ink)}
-  .chip.g{background:var(--green-soft);color:var(--green)}
-  .chip.a{background:var(--amber-soft);color:var(--amber)}
-  .chip.r{background:var(--red-soft);color:var(--red)}
-  .chip.b{background:var(--blue-soft);color:var(--blue)}
-  .route{cursor:pointer;display:flex;gap:12px}
-  .route .badge{width:54px;height:54px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;background:var(--green-soft)}
-  .route .body{flex:1;min-width:0}
-  .route .meta{color:var(--muted);font-size:13px;margin:3px 0 8px}
-  .scores{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-  .score{font-size:11px;color:var(--muted)}
-  .score b{display:block;color:var(--ink);font-size:13px;margin-bottom:2px}
-  .bar{height:6px;border-radius:4px;background:var(--line);overflow:hidden}
-  .bar i{display:block;height:100%;border-radius:4px}
-  .bar.good i{background:var(--green)} .bar.warn i{background:var(--amber)} .bar.bad i{background:var(--red)} .bar.neut i{background:var(--blue)}
-  .fit{margin-top:8px;font-size:13px}
-  .fit.r{color:var(--red)} .fit.a{color:var(--amber)} .fit.g{color:var(--green)}
-  .empty{color:var(--muted);text-align:center;padding:30px 10px}
-  /* detail */
-  .back{background:none;border:0;color:#fff;font-size:15px;padding:0}
-  .hero{background:linear-gradient(135deg,#2f6b4f,#4a8a6a);color:#fff;border-radius:var(--radius);padding:18px 16px;margin-bottom:12px}
-  .hero h3{font-size:22px;margin-bottom:4px}
-  .hero p{margin:0;opacity:.9;font-size:14px}
-  .kv{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;font-size:14px}
-  .kv div span{display:block;color:var(--muted);font-size:12px}
-  .big{font-size:26px;font-weight:700;color:var(--green)}
-  table{width:100%;border-collapse:collapse;font-size:14px}
-  td{padding:6px 0;border-bottom:1px solid var(--line)} td:last-child{text-align:right;font-variant-numeric:tabular-nums}
-  tr.total td{font-weight:700;border-bottom:0;padding-top:10px}
-  .tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px}
-  .tab{flex-shrink:0;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:13px}
-  .tab.on{background:var(--green);color:#fff;border-color:var(--green)}
-  .wx{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
-  .wx div{background:var(--bg);border-radius:10px;padding:10px;text-align:center}
-  .wx b{font-size:20px;display:block} .wx span{font-size:12px;color:var(--muted)}
-  ul.adv{margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.5}
-  .warn{background:var(--amber-soft);color:#6d4a0d;padding:10px 12px;border-radius:10px;font-size:13px;margin-top:10px}
-  .danger{background:var(--red-soft);color:#6d1f1f}
-  .ok{background:var(--green-soft);color:#1e4a35}
-  a.btn{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:9px 12px;border-radius:10px;font-size:14px;margin:6px 6px 0 0}
-  p.note{font-size:12px;color:var(--muted);margin:8px 0 0}
-  .modeTxt{font-size:14px;line-height:1.5}
-  .modeTxt b{display:block;margin-top:8px}
-  footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
-  .hidden{display:none}
-  .sleep{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header>
-  <button id="backBtn" class="back hidden">‹ Terug</button>
-  <h1 id="title">🎒 Trekpad</h1>
-  <button id="settingsBtn">⚙️</button>
+<header id="topbar">
+  <button id="back" aria-label="Terug">‹ Terug</button>
+  <h1>Trekpad <small>trektochten in Europa</small></h1>
 </header>
 
-<main>
-  <!-- HOME -->
-  <section id="home">
-    <div class="card">
-      <h2>Hoe reis je?</h2>
-      <div class="modes" id="modes"></div>
-      <p class="note">Kies je reisvorm: de app toont dan welke routes haalbaar zijn en rekent de kosten uit.</p>
+<section id="v-home" class="view on">
+  <div class="wrap">
+    <div class="modes" id="modes"></div>
+    <div class="bar"><span id="count"></span><button id="filterToggle">Filters</button></div>
+    <div id="filters">
+      <label class="f">Land of regio<select id="fCountry"><option value="">Alle</option></select></label>
+      <label class="f">Reismaand<select id="fMonth"></select></label>
+      <label class="f">Maximum dagen<select id="fDays"><option value="99">Alle</option><option value="4">tot 4</option><option value="7">tot 7</option><option value="10">tot 10</option><option value="15">tot 15</option></select></label>
+      <label class="f">Maximum moeilijkheid<select id="fDiff"><option value="5">Alle</option><option value="2">Makkelijk</option><option value="3">Gemiddeld</option><option value="4">Moeilijk</option></select></label>
+      <label class="f">Sorteren op<select id="fSort"><option value="fit">Beste match</option><option value="beauty">Schoonheid</option><option value="cost">Laagste kosten</option><option value="days">Kortste</option></select></label>
+      <label class="f">Personen<input type="number" id="fPeople" min="1" max="8" value="1"></label>
     </div>
-
-    <div class="card">
-      <h2>Filters</h2>
-      <div class="row">
-        <label class="f">Land/regio<select id="fCountry"><option value="">Alle</option></select></label>
-        <label class="f">Max. dagen<select id="fDays"><option value="99">Alle</option><option value="4">t/m 4</option><option value="7">t/m 7</option><option value="10">t/m 10</option><option value="15">t/m 15</option></select></label>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <label class="f">Max. moeilijkheidsgraad<select id="fDiff"><option value="5">Alle</option><option value="2">Makkelijk (≤2)</option><option value="3">Gemiddeld (≤3)</option><option value="4">Moeilijk (≤4)</option></select></label>
-        <label class="f">Sorteer op<select id="fSort"><option value="fit">Beste match</option><option value="beauty">Schoonheid</option><option value="cost">Laagste kosten</option><option value="days">Kortste</option></select></label>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <label class="f">Reismaand<select id="fMonth"></select></label>
-        <label class="f">Personen<input type="number" id="fPeople" min="1" max="8" value="1"></label>
-      </div>
-    </div>
-
-    <div id="map"></div>
     <div id="list"></div>
-  </section>
+    <footer>Gegevens zijn schattingen; controleer altijd ter plaatse. Foto's: Wikimedia Commons, kaart: OpenStreetMap, weer: Open-Meteo.</footer>
+  </div>
+</section>
 
-  <!-- DETAIL -->
-  <section id="detail" class="hidden"></section>
+<section id="v-map" class="view"><div id="map"></div></section>
 
-  <!-- SETTINGS -->
-  <section id="settings" class="hidden">
-    <div class="card">
-      <h2>Vertrekpunt & prijzen</h2>
-      <div class="row">
-        <label class="f">Vertrek vanuit<select id="sHome"></select></label>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <label class="f">Brandstof €/liter<input type="number" id="sFuel" step="0.01" value="1.65"></label>
-        <label class="f">Verbruik l/100 km<input type="number" id="sCons" step="0.1" value="6.5"></label>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <label class="f">Huurauto €/dag<input type="number" id="sRent" value="45"></label>
-        <label class="f">Eten €/dag p.p.<input type="number" id="sFood" value="15"></label>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <label class="f">Overnachting<select id="sSleep">
-          <option value="wild">Wildkamperen / bivak (gratis waar toegelaten)</option>
-          <option value="camping" selected>Camping (±€12 p.n.)</option>
-          <option value="hut">Hut / refuge (±€35 p.n., vaak met ontbijt/avondmaal extra)</option>
-          <option value="hostel">Hostel / B&B (±€40 p.n.)</option>
-        </select></label>
-      </div>
-      <p class="note">Vliegprijzen en treinprijzen zijn schattingen op basis van gangbare tarieven. Controleer altijd de actuele prijs via de knoppen in de route.</p>
+<section id="v-detail" class="view"></section>
+
+<section id="v-settings" class="view">
+  <div class="wrap">
+    <div class="block">
+      <h4>Vertrekpunt en prijzen</h4>
+      <label class="f wide">Vertrek vanuit<select id="sHome"></select></label>
+      <label class="f">Brandstof, € per liter<input type="number" id="sFuel" step="0.01" value="1.65"></label>
+      <label class="f">Verbruik, l/100 km<input type="number" id="sCons" step="0.1" value="6.5"></label>
+      <label class="f">Huurauto, € per dag<input type="number" id="sRent" value="45"></label>
+      <label class="f">Eten, € per dag p.p.<input type="number" id="sFood" value="15"></label>
+      <label class="f wide">Hoe slaap je het liefst?<select id="sSleep">
+        <option value="wild">Wildkamperen of bivak (gratis waar toegelaten)</option>
+        <option value="camping">Camping (±€12 per nacht)</option>
+        <option value="hut">Berghut of refuge (±€35 per nacht)</option>
+        <option value="hostel">Hostel of B&amp;B (±€40 per nacht)</option>
+      </select></label>
+      <p class="note">Vlieg- en treinprijzen zijn gemiddelden. Bekijk de actuele prijs via de knoppen bij een route.</p>
     </div>
-  </section>
-</main>
-<footer>Trekpad · versie 0.2 · gegevens zijn schattingen, controleer altijd ter plaatse</footer>
-
-<script>
-/* ---------- DATA ---------- */
-const MODES = [
-  {id:'ov',   ic:'🚆', name:'Zonder auto',           sub:'trein & bus, geen vlucht'},
-  {id:'car',  ic:'🚗', name:'Met eigen auto',        sub:'rijden naar de start'},
-  {id:'fly',  ic:'✈️', name:'Vliegen, geen huurauto', sub:'vlucht + openbaar vervoer'},
-  {id:'flycar',ic:'✈️🚗',name:'Vliegen + huurauto',  sub:'vlucht + auto ter plaatse'},
-];
-const HOMES = {
-  BRU:{name:'België (Brussel)',lat:50.85,lon:4.35},
-  AMS:{name:'Nederland (Amsterdam)',lat:52.37,lon:4.9},
-  PAR:{name:'Frankrijk (Parijs)',lat:48.86,lon:2.35},
-  DUS:{name:'Duitsland (Düsseldorf)',lat:51.22,lon:6.78},
-};
-const MONTHS=['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
-
-/* Routes. Scores 1–5: beauty (schoonheid), diff (zwaarte), danger (gevaar), quiet (rust).
-   access: haalbaarheid per reisvorm 'g' goed, 'a' matig, 'r' moeilijk.
-   climate: per maand [tmin, tmax, regendagen] – gemiddelden op routehoogte (schatting).
-   fly: [min,max] retour vanuit West-Europa; train: schatting retour; local: lokaal vervoer heen+terug. */
-const ROUTES = [
- {id:'escapardenne',name:'Escapardenne Eislek Trail',country:'België / Luxemburg',region:'Ardennen',ic:'🌲',
-  km:104,days:5,beauty:3,diff:2,danger:1,quiet:3,
-  lat:50.02,lon:5.92,alt:'300–500 m',season:[4,10],
-  sleep:['camping','hostel','wild? nee – bivakzones beperkt'],
-  loop:false,
-  access:{ov:'g',car:'g',fly:'a',flycar:'a'},
-  how:{ov:'Trein Brussel → Luxemburg → Kautenbach (±3 u). Einde in La Roche-en-Ardenne: bus naar Marloie, trein terug.',
-       car:'Parkeren in Kautenbach of La Roche; terug naar de auto met trein+bus (±3 u).',
-       fly:'Niet zinvol vanuit de Benelux; vanuit verder weg: vlieg naar Luxemburg, trein naar Kautenbach.',
-       flycar:'Vlieg naar Luxemburg, huurauto op de luchthaven.'},
-  drive:{BRU:190,AMS:380,PAR:330,DUS:250},train:45,fly:[90,180],local:20,airport:'LUX',
-  desc:'Rustige, bosrijke trail door de Luxemburgse en Belgische Ardennen, langs de Sûre en Ourthe. Ideale eerste meerdaagse tocht, goed bewegwijzerd en uitstekend met de trein.',
-  climate:[[-1,4,15],[-1,5,13],[1,9,14],[3,13,12],[7,17,13],[10,20,13],[12,22,12],[12,22,11],[9,18,11],[6,13,13],[2,7,15],[0,4,16]]},
-
- {id:'eifelsteig',name:'Eifelsteig',country:'Duitsland',region:'Eifel',ic:'🌳',
-  km:313,days:15,beauty:3,diff:2,danger:1,quiet:3,
-  lat:50.6,lon:6.5,alt:'300–700 m',season:[4,10],
-  sleep:['hostel','camping','trekkershut (Trekkingplätze in de Eifel)'],
-  loop:false,
-  access:{ov:'g',car:'g',fly:'a',flycar:'a'},
-  how:{ov:'Trein naar Aken (start Kornelimünster). Einde in Trier: rechtstreekse trein terug naar Luxemburg/Brussel.',
-       car:'Parkeren in Aken; vanuit Trier met de trein terug (±2,5 u). Je kan ook etappes doen als lussen.',
-       fly:'Vlieg naar Keulen/Bonn of Luxemburg, verder met de trein.',
-       flycar:'Vlieg naar Keulen/Bonn, huurauto op de luchthaven.'},
-  drive:{BRU:150,AMS:270,PAR:420,DUS:90},train:60,fly:[90,200],local:25,airport:'CGN',
-  desc:'Lange, afwisselende trail van Aken naar Trier door Hoge Venen, vulkanische Eifel en Maare-meren. Je kan hem in stukken doen; elk deel is goed met de trein bereikbaar.',
-  climate:[[-2,3,16],[-2,4,13],[0,8,14],[3,13,12],[7,17,13],[10,20,13],[12,22,12],[12,22,11],[9,18,11],[5,13,13],[2,7,15],[-1,4,16]]},
-
- {id:'whw',name:'West Highland Way',country:'Schotland',region:'Highlands',ic:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
-  km:154,days:7,beauty:4,diff:3,danger:2,quiet:2,
-  lat:56.4,lon:-4.7,alt:'0–550 m',season:[4,10],
-  sleep:['wildkamperen toegelaten (Scottish access code)','camping','hostel','B&B'],
-  loop:false,
-  access:{ov:'g',car:'a',fly:'g',flycar:'a'},
-  how:{ov:'Trein/bus naar Londen, dan trein naar Glasgow (of nachttrein Caledonian Sleeper). Start Milngavie: 20 min met de trein vanuit Glasgow. Einde Fort William: trein terug naar Glasgow.',
-       car:'Lange rit incl. ferry/tunnel; parkeren in Milngavie, terug met de trein vanuit Fort William (4 u). Weinig voordeel.',
-       fly:'Vlieg naar Glasgow of Edinburgh. Trein naar Milngavie (30 min). Perfecte route zonder auto.',
-       flycar:'Huurauto biedt hier weinig extra; alleen nuttig als je nadien verder wilt naar de eilanden.'},
-  drive:{BRU:1250,AMS:1200,PAR:1350,DUS:1250},train:220,fly:[80,220],local:35,airport:'GLA',
-  desc:'De klassieker van Schotland: van de rand van Glasgow langs Loch Lomond, over Rannoch Moor naar Fort William aan de voet van Ben Nevis. Wildkamperen is legaal, het weer is de grootste uitdaging.',
-  climate:[[0,6,20],[0,6,16],[1,8,17],[3,11,14],[5,14,13],[8,16,13],[10,18,14],[10,18,15],[8,15,16],[5,12,19],[2,8,19],[0,6,20]]},
-
- {id:'tmb',name:'Tour du Mont Blanc',country:'Frankrijk / Italië / Zwitserland',region:'Alpen',ic:'🏔️',
-  km:170,days:10,beauty:5,diff:4,danger:2,quiet:1,
-  lat:45.92,lon:6.87,alt:'1000–2650 m',season:[6,9],
-  sleep:['berghut (refuge, reserveren!)','camping in de dalen','wildkamperen beperkt/verboden in FR-delen'],
-  loop:true,
-  access:{ov:'g',car:'g',fly:'g',flycar:'a'},
-  how:{ov:'Trein Brussel → Parijs → Genève of Lyon, dan trein/bus naar Chamonix of Les Houches (±7 u totaal). Rondtocht: je eindigt waar je begon.',
-       car:'±850 km. Gratis/betaald parkeren in Les Houches; rondtocht dus auto wacht op je.',
-       fly:'Vlieg naar Genève, shuttle-bus naar Chamonix (1,5 u). Heel vlot.',
-       flycar:'Vlieg naar Genève, huurauto 1 u naar Chamonix. Niet nodig voor de tocht zelf.'},
-  drive:{BRU:860,AMS:1040,PAR:600,DUS:900},train:180,fly:[70,200],local:50,airport:'GVA',
-  desc:'Rondom het Mont Blanc-massief door drie landen. Spectaculair, maar druk in juli-augustus; hutten vroeg reserveren. Hoge cols kunnen tot begin juli nog sneeuw dragen.',
-  climate:[[-8,-1,10],[-8,0,9],[-5,4,10],[-2,8,11],[2,13,13],[5,17,12],[8,20,11],[8,19,11],[5,16,9],[1,11,10],[-4,4,10],[-7,0,10]]},
-
- {id:'gr20',name:'GR20',country:'Frankrijk (Corsica)',region:'Corsica',ic:'⛰️',
-  km:180,days:15,beauty:5,diff:5,danger:4,quiet:2,
-  lat:42.3,lon:9.05,alt:'500–2200 m',season:[6,9],
-  sleep:['refuges (tent verplicht naast hut of bed reserveren)','wildkamperen verboden','bivakplaats bij refuge'],
-  loop:false,
-  access:{ov:'a',car:'r',fly:'g',flycar:'a'},
-  how:{ov:'Trein naar Marseille/Nice, nachtferry naar Bastia, trein naar Calenzana (via Calvi). Lang maar avontuurlijk (±24 u).',
-       car:'Alleen met ferry; auto staat 2 weken stil aan de ene kant. Niet aanbevolen.',
-       fly:'Vlieg naar Bastia of Calvi. Bus/taxi naar Calenzana. Einde Conca: shuttle naar Porto-Vecchio, bus naar Bastia.',
-       flycar:'Huurauto nutteloos tijdens de tocht; alleen handig voor extra dagen aan het strand.'},
-  drive:{BRU:1400,AMS:1550,PAR:1150,DUS:1450},train:260,fly:[120,320],local:60,airport:'BIA',
-  desc:'Vaak de zwaarste GR van Europa genoemd: rotsige graten, kettingen, lange dagen zonder bevoorrading. Pas voor wie al ervaring en een goede conditie heeft. Onweer in de namiddag is een reëel gevaar.',
-  climate:[[0,8,8],[0,8,7],[2,11,7],[4,14,8],[8,18,7],[12,23,4],[15,27,2],[15,27,2],[12,23,5],[8,17,8],[4,12,9],[1,9,9]]},
-
- {id:'kungsleden',name:'Kungsleden (Abisko – Nikkaluokta)',country:'Zweden',region:'Lapland',ic:'🦌',
-  km:110,days:7,beauty:5,diff:3,danger:2,quiet:4,
-  lat:68.2,lon:18.8,alt:'400–1150 m',season:[7,9],
-  sleep:['STF-hutten (met sauna!)','wildkamperen vrij (allemansrätt)','tent naast hut'],
-  loop:false,
-  access:{ov:'g',car:'r',fly:'g',flycar:'r'},
-  how:{ov:'Trein naar Stockholm (via Kopenhagen, 2 dagen) en nachttrein naar Abisko Turiststation. Lang maar 100 % zonder auto. Einde Nikkaluokta: bus naar Kiruna, trein terug.',
-       car:'±2600 km, meerdere dagen rijden. Niet realistisch.',
-       fly:'Vlieg naar Kiruna (via Stockholm). Bus naar Abisko (1,5 u). Terug: bus Nikkaluokta → Kiruna.',
-       flycar:'Geen voordeel: start en einde liggen niet bij elkaar en busvervoer is goed.'},
-  drive:{BRU:2600,AMS:2450,PAR:2850,DUS:2400},train:400,fly:[200,450],local:60,airport:'KRN',
-  desc:'Weidse toendra, berkenbossen en bergen boven de poolcirkel. Wildkamperen is overal toegelaten; hutten verkopen basisvoedsel. Muggen in juli, herfstkleuren in september.',
-  climate:[[-15,-8,8],[-14,-7,7],[-10,-2,7],[-5,3,7],[0,9,8],[5,15,9],[8,18,11],[7,16,11],[3,11,10],[-3,4,10],[-9,-3,9],[-13,-7,9]]},
-
- {id:'laugavegur',name:'Laugavegur',country:'IJsland',region:'Hooglanden',ic:'🌋',
-  km:55,days:4,beauty:5,diff:3,danger:3,quiet:2,
-  lat:63.95,lon:-19.2,alt:'250–1050 m',season:[7,8],
-  sleep:['hutten (ver vooraf reserveren)','campings naast de hutten','wildkamperen verboden'],
-  loop:false,
-  access:{ov:'r',car:'r',fly:'g',flycar:'a'},
-  how:{ov:'Niet mogelijk zonder vlucht (eiland).',
-       car:'Niet mogelijk zonder vlucht.',
-       fly:'Vlieg naar Keflavík. Hooglandbus Reykjavik → Landmannalaugar; einde Þórsmörk: bus terug. Vlot geregeld.',
-       flycar:'Huurauto moet een 4x4 zijn voor de F-wegen en staat 4 dagen stil. Bus is handiger.'},
-  drive:{BRU:0,AMS:0,PAR:0,DUS:0},train:0,fly:[180,420],local:110,airport:'KEF',
-  desc:'Regenboogbergen, zwarte woestijnen, gletsjers en rivieren die je te voet oversteekt. Kort maar intens; het weer kan in juli omslaan naar sneeuw.',
-  climate:[[-5,0,16],[-5,0,15],[-4,1,15],[-2,4,14],[1,8,13],[4,11,12],[6,13,12],[5,12,13],[3,9,15],[0,5,16],[-3,2,15],[-5,0,16]]},
-
- {id:'altavia1',name:'Alta Via 1',country:'Italië',region:'Dolomieten',ic:'🪨',
-  km:120,days:9,beauty:5,diff:3,danger:2,quiet:2,
-  lat:46.6,lon:12.1,alt:'1200–2750 m',season:[6,9],
-  sleep:['rifugio’s (reserveren)','wildkamperen verboden','campings in de dalen'],
-  loop:false,
-  access:{ov:'g',car:'a',fly:'g',flycar:'a'},
-  how:{ov:'Trein naar München of Innsbruck, dan naar Dobbiaco/Toblach, bus naar Lago di Braies. Einde Belluno: trein naar Venetië en terug.',
-       car:'±1000 km. Auto bij Lago di Braies, terug vanuit Belluno via trein+bus (halve dag).',
-       fly:'Vlieg naar Venetië of Innsbruck, trein/bus naar Lago di Braies (3 u).',
-       flycar:'Vlieg naar Venetië, huurauto; nuttig als je extra bergdorpen wilt zien.'},
-  drive:{BRU:1000,AMS:1150,PAR:1100,DUS:950},train:200,fly:[70,220],local:40,airport:'VCE',
-  desc:'De mooiste hutten-tocht van de Dolomieten: van het Pragser Wildsee tot Belluno langs bleke kalkrotsen. Technisch eenvoudig, wel lange klimmen.',
-  climate:[[-8,0,6],[-7,1,6],[-4,5,7],[-1,9,10],[3,14,13],[6,17,14],[9,20,13],[9,19,13],[5,16,9],[1,11,8],[-4,4,8],[-7,0,6]]},
-
- {id:'fishermans',name:'Fishermen’s Trail (Rota Vicentina)',country:'Portugal',region:'Alentejo / Algarve',ic:'🌊',
-  km:226,days:13,beauty:4,diff:3,danger:1,quiet:3,
-  lat:37.7,lon:-8.78,alt:'0–150 m',season:[10,5],
-  sleep:['hostels & guesthouses in elk dorp','campings','wildkamperen verboden'],
-  loop:false,
-  access:{ov:'a',car:'a',fly:'g',flycar:'g'},
-  how:{ov:'Trein naar Lissabon duurt 2+ dagen; bus Lissabon → Porto Covo (3 u). Einde Lagos: trein naar Lissabon.',
-       car:'±2100 km; niet realistisch voor de meeste mensen.',
-       fly:'Vlieg naar Lissabon of Faro. Bus (Rede Expressos) naar Porto Covo. Prima zonder auto.',
-       flycar:'Huurauto handig om stranden onderweg te combineren, maar de route zelf loopt lineair.'},
-  drive:{BRU:2100,AMS:2250,PAR:1750,DUS:2200},train:300,fly:[60,200],local:40,airport:'LIS',
-  desc:'Zandpaden over kliffen langs de Atlantische kust, vissersdorpjes en strand. Een wintertocht bij uitstek (okt–mei); in de zomer te heet en mul zand maakt het zwaarder dan je denkt.',
-  climate:[[7,15,11],[8,16,10],[9,18,8],[10,19,8],[12,22,5],[15,25,2],[16,27,1],[16,27,1],[15,25,4],[13,22,8],[10,18,10],[8,15,11]]},
-
- {id:'jotunheimen',name:'Jotunheimen: Gjendesheim – Glitterheim',country:'Noorwegen',region:'Jotunheimen',ic:'🇳🇴',
-  km:60,days:4,beauty:5,diff:4,danger:3,quiet:3,
-  lat:61.5,lon:8.6,alt:'1000–1800 m (optie Besseggen / Galdhøpiggen)',season:[7,9],
-  sleep:['DNT-hutten (lid worden loont)','wildkamperen vrij (allemannsretten)'],
-  loop:false,
-  access:{ov:'g',car:'a',fly:'g',flycar:'a'},
-  how:{ov:'Trein naar Oslo (via Kopenhagen/Hamburg, 1–2 dagen) of nachtbus. Vanuit Oslo: bus Valdresekspressen naar Gjendesheim (4,5 u). Terug: bus vanuit Spiterstulen/Lom.',
-       car:'±1600 km + ferry. Auto staat bij Gjendesheim; terug met bus (3 u).',
-       fly:'Vlieg naar Oslo Gardermoen; bus naar Gjendesheim. Goed te doen.',
-       flycar:'Vlieg naar Oslo, huurauto 4 u. Handig als je meerdere dalen wil combineren.'},
-  drive:{BRU:1600,AMS:1450,PAR:1900,DUS:1400},train:320,fly:[90,260],local:70,airport:'OSL',
-  desc:'De Besseggen-graat tussen het groene Gjende en het blauwe Bessvatnet, daarna over de hoogvlakte naar Glitterheim; optioneel Galdhøpiggen (2469 m), de hoogste top van Noorwegen.',
-  climate:[[-12,-5,10],[-12,-4,9],[-9,-1,9],[-5,3,8],[0,9,9],[4,14,11],[7,17,12],[6,15,12],[2,10,11],[-2,4,11],[-7,-1,10],[-11,-4,10]]},
-
- {id:'vosges',name:'GR5 Vogezen (Wissembourg – Schlucht)',country:'Frankrijk',region:'Vogezen',ic:'🍇',
-  km:150,days:7,beauty:4,diff:3,danger:1,quiet:3,
-  lat:48.6,lon:7.3,alt:'200–1300 m',season:[5,10],
-  sleep:['fermes-auberges (slapen + eten op de boerderij)','campings','refuges Club Vosgien','bivak gedoogd buiten reservaten'],
-  loop:false,
-  access:{ov:'g',car:'g',fly:'a',flycar:'a'},
-  how:{ov:'Trein Brussel → Straatsburg (2,5 u) → Wissembourg. Einde Col de la Schlucht: bus naar Munster/Colmar, trein terug.',
-       car:'±450 km; auto in Wissembourg, terug met trein vanuit Colmar (3 u).',
-       fly:'Vlieg naar Basel/Mulhouse of Straatsburg; trein naar Wissembourg.',
-       flycar:'Vlieg naar Basel, huurauto; nuttig voor wijnroute nadien.'},
-  drive:{BRU:450,AMS:650,PAR:500,DUS:450},train:90,fly:[90,200],local:30,airport:'SXB',
-  desc:'Over de kam van de Vogezen langs kasteelruïnes, meren en de hoge weiden (hautes chaumes). Elke avond kan je in een ferme-auberge eten en slapen, dus lichte rugzak mogelijk.',
-  climate:[[-3,3,14],[-3,4,12],[0,8,13],[3,13,12],[7,17,13],[10,20,13],[12,23,11],[12,22,11],[9,18,10],[5,13,12],[1,7,14],[-2,4,15]]},
-
- {id:'peaks',name:'Peaks of the Balkans',country:'Albanië / Montenegro / Kosovo',region:'Prokletije',ic:'🐐',
-  km:192,days:10,beauty:5,diff:4,danger:3,quiet:5,
-  lat:42.45,lon:19.85,alt:'700–2300 m',season:[6,9],
-  sleep:['guesthouses in bergdorpen (goedkoop, met eten)','wildkamperen gedoogd','enkele hutten'],
-  loop:true,
-  access:{ov:'r',car:'r',fly:'g',flycar:'a'},
-  how:{ov:'Theoretisch via trein/bus naar Montenegro (2+ dagen). Praktisch alleen met vlucht.',
-       car:'±2200 km. Niet realistisch.',
-       fly:'Vlieg naar Tirana of Podgorica. Minibus naar Shkodër, dan naar Theth (3 u). Rondtocht, dus je komt terug in Theth.',
-       flycar:'Huurauto nuttig voor Albanië-roadtrip erna, maar weg naar Theth is bergachtig.'},
-  drive:{BRU:2200,AMS:2300,PAR:2100,DUS:2050},train:0,fly:[90,260],local:50,airport:'TIA',
-  desc:'Ruige, weinig bezochte bergen op de grens van drie landen. Grensvergunning nodig (regel je vooraf). Gastvrijheid in de dorpen is legendarisch; markering soms matig, dus GPS mee.',
-  climate:[[-6,2,10],[-5,3,9],[-2,7,10],[2,12,11],[6,17,12],[9,21,9],[12,25,6],[12,25,6],[8,20,7],[4,14,10],[0,8,12],[-4,3,11]]},
-];
-
-/* Veilig starten: per route de specifieke punten. Algemene stappen staan in SAFE_GENERAL. */
-const SAFE_GENERAL=[
-  'Laat je routeplan (etappes, verwachte einddatum) achter bij iemand thuis en spreek af wanneer je je meldt.',
-  'Download de kaart offline (bv. Organic Maps of Komoot) en neem een powerbank; reken niet op bereik.',
-  'Test je rugzak vooraf: alles ingepakt max. 20 % van je lichaamsgewicht, en loop er minstens één lange dag mee thuis.',
-  'Check de weersverwachting de avond vóór elke etappe (knop hieronder) en pas je plan aan.',
-  'Noodnummer in heel Europa: 112. Zet de locatie-deling op je gsm aan voor noodgevallen.',
-];
-const SAFETY={
- escapardenne:['Makkelijkste instap: geen technische stukken. Let op gladde rotsen langs de Ourthe na regen.','Drinkwater: vul bij in dorpen; beken niet ongefilterd drinken.','Weinig winkels onderweg: eten voor 2 dagen meenemen.'],
- eifelsteig:['Goed bewegwijzerd (blauw-wit logo). Jachtseizoen (okt–jan): blijf op de paden.','Trekkingplätze moet je online reserveren; wildkamperen is verboden in Duitsland.','Etappes van 20+ km: begin met kortere etappes als je nieuw bent.'],
- whw:['Het weer wisselt per uur: regenkledij altijd bovenaan in je rugzak.','Midges (mugjes) van juni tot september: hoofdnet en Smidge-spray.','Loch Lomond-oostoever is rotsig en traag: plan daar een korte dag.','Wildkamperen: niet in de beheerzone rond Loch Lomond zonder vergunning (mrt–sep).'],
- tmb:['Reserveer hutten maanden vooraf; zonder reservatie geen bed in juli-augustus.','Sneeuwvelden op de cols tot begin juli: vraag in de hut naar de toestand, neem stokken.','Hoogte: eerste dag rustig aan, veel drinken; hoofdpijn = stoppen met klimmen.','Onweer: vertrek vóór 7 u, wees vóór 14 u van de pas af.'],
- gr20:['Doe eerst een andere meerdaagse bergtocht voor je hieraan begint.','Reserveer refuges via het PNRC-systeem; tent verplicht als je geen bed hebt.','Kettingpassages (Cirque de la Solitude is dicht; nu via Monte Cinto): geen tocht bij nat weer.','Minstens 3 liter water per dag, bronnen staan op de kaart; onweer in de namiddag.','Noodnummer 112; PGHM (bergredding) kent de route goed.'],
- kungsleden:['Rivieren oversteek je via bruggen of roeiboten (laat altijd één boot aan elke kant).','Mobiel bereik is er bijna niet: satelliet-messenger (Garmin inReach) sterk aangeraden.','Hutten verkopen eten maar zijn ’s avonds vol: tent meenemen.','Muggen in juli; nachtvorst mogelijk vanaf eind augustus.'],
- laugavegur:['Reserveer hutten/campings maanden vooraf; wildkamperen is verboden.','Rivieroversteek: schoenen uit, stokken, nooit alleen bij hoog water, ’s ochtends is het water lager.','Sneeuw en mist zijn in juli normaal: GPS-track meenemen, markeringen kunnen verdwijnen.','Check safetravel.is voor waarschuwingen voor je vertrekt.'],
- altavia1:['Rifugio’s reserveren vanaf juli; neem een lakenzak mee.','Hoogte: ga niet rechtstreeks naar 2500 m als je nooit hoog was; de eerste etappe is rustig genoeg.','Namiddagonweer in augustus: vroeg vertrekken.','Via ferrata-stukken op de varianten zijn optioneel: neem de normale route zonder klimset.'],
- fishermans:['Hitte en geen schaduw: 3 liter water, start bij zonsopgang.','Kliffen: blijf achter de markering, de rand brokkelt af.','Mul zand vermoeit: etappes van 20 km voelen als 30; plan rustdagen.','Overal dorpen, dus geen tent nodig: reserveer in het hoogseizoen.'],
- jotunheimen:['Besseggen: niet bij nat weer of harde wind, de graat is smal; loop van Memurubu naar Gjendesheim (boot heen).','DNT-hutten: lid worden geeft korting en toegang tot zelfbedieningshutten.','Sneeuw blijft tot juli liggen; neem wandelstokken en gaiters.','Check yr.no elke avond, het weer in Jotunheimen draait snel.'],
- vosges:['Zeer veilig en goed gemarkeerd (Club Vosgien, rode rechthoek).','Fermes-auberges reserveren in het weekend.','Op de kam (Hohneck) kan het hard waaien en ’s winters sneeuwen.'],
- peaks:['Grensvergunning (cross-border permit) vooraf aanvragen via een lokaal agentschap; zonder vergunning geen tocht.','Markering is matig: GPS met de officiële GPX-track is noodzakelijk.','Herdershonden: stop, maak je niet groot, laat de herder roepen.','Weinig bereik; gastgezinnen in elk dorp, boek via een lokale organisatie als je zeker wil zijn.'],
-};
-
-/* ---------- STATE ---------- */
-const LS='trekpad_v1';
-let S={mode:'ov',home:'BRU',people:1,month:(new Date().getMonth()),fuel:1.65,cons:6.5,rent:45,food:15,sleep:'camping',country:'',days:99,diff:5,sort:'fit'};
-try{Object.assign(S,JSON.parse(localStorage.getItem(LS)||'{}'))}catch(e){}
-function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
-
-/* ---------- COSTS ---------- */
-const SLEEP_COST={wild:0,camping:12,hut:35,hostel:40};
-function cost(r){
-  const p=S.people, nights=r.days-1;
-  const lines=[];
-  let travel=0;
-  if(S.mode==='car'){
-    const km=(r.drive[S.home]||0)*2;
-    if(!km){return null}
-    const fuel=km/100*S.cons*S.fuel;
-    lines.push(['Brandstof '+km+' km heen/terug',fuel]);
-    const tolls=r.country.match(/Frankrijk|Italië|Portugal/)?Math.round(km*0.06):0;
-    if(tolls)lines.push(['Tol (schatting)',tolls]);
-    if(!r.loop)lines.push(['Terug naar de auto (OV)',40*p]);
-    travel=fuel+tolls+(r.loop?0:40*p);
-  }else if(S.mode==='ov'){
-    if(!r.train){return null}
-    travel=r.train*p; lines.push(['Trein/bus retour ×'+p,travel]);
-    lines.push(['Lokaal vervoer ×'+p,r.local*p]); travel+=r.local*p;
-  }else{
-    const f=(r.fly[0]+r.fly[1])/2*p;
-    lines.push(['Vlucht retour (gem. €'+r.fly[0]+'–'+r.fly[1]+') ×'+p,f]); travel=f;
-    if(S.mode==='fly'){lines.push(['Lokaal vervoer ×'+p,r.local*p]);travel+=r.local*p}
-    else{const rc=S.rent*(r.days+1);lines.push(['Huurauto '+(r.days+1)+' dagen',rc]);const lf=300/100*S.cons*S.fuel;lines.push(['Brandstof ter plaatse (±300 km)',lf]);travel+=rc+lf}
-  }
-  const sl=SLEEP_COST[S.sleep]*nights*p;
-  lines.push(['Overnachting '+nights+' nachten ×'+p,sl]);
-  const fd=S.food*r.days*p; lines.push(['Eten '+r.days+' dagen ×'+p,fd]);
-  return {lines,total:travel+sl+fd};
-}
-
-/* ---------- FIT ---------- */
-const FIT_TXT={g:['g','✓ Goed haalbaar met deze reisvorm'],a:['a','~ Haalbaar, maar omslachtig of weinig voordeel'],r:['r','✗ Niet realistisch met deze reisvorm']};
-function inSeason(r,m){const [a,b]=r.season;const mm=m+1;return a<=b?(mm>=a&&mm<=b):(mm>=a||mm<=b)}
-
-/* ---------- WEATHER ADVICE ---------- */
-function advice(r,m){
-  const [tmin,tmax,rain]=r.climate[m];
-  const out=[],warns=[];
-  if(!inSeason(r,m))warns.push({t:'danger',s:'Buiten het seizoen: hutten kunnen dicht zijn, sneeuw op de passen en bussen rijden minder. Kies liever '+MONTHS[r.season[0]-1]+'–'+MONTHS[r.season[1]-1]+'.'});
-  if(tmin<=-5){out.push('Winteruitrusting: slaapzak comfort −10 °C, isolatiematje R≥4, dons- of synthetische jas, muts, handschoenen.');out.push('Reken op sneeuw en ijs: stokken, eventueel micro-spikes; dagen zijn kort.')}
-  else if(tmin<=0){out.push('Warme slaapzak (comfort −5 °C), thermisch ondergoed, muts en handschoenen. Nachtvorst is normaal.');out.push('Mogelijk sneeuwvelden op hoogte: wandelstokken en stevige schoenen met profiel.')}
-  else if(tmin<=6){out.push('Slaapzak comfort 0 °C, fleece of lichte donsjas voor de avond, dunne muts.')}
-  else if(tmin<=12){out.push('Slaapzak comfort +5 °C, lichte fleece voor ’s avonds.')}
-  else{out.push('Lichte slaapzak of liner volstaat; neem toch een lange broek en dunne trui voor de avond.')}
-  if(tmax>=25){out.push('Hitte: pet of zonnehoed, zonnecrème, minstens 2–3 l water per dag, start vroeg en rust tussen 12 en 15 u.')}
-  else if(tmax>=18){out.push('Overdag zomers: korte broek + lichte, ademende laag; zonnecrème.')}
-  if(rain>=14){out.push('Zeer nat: goede regenjas én regenbroek, rugzakhoes of drybags, waterdichte schoenen en reservesokken. Snelle drooglagen, geen katoen.')}
-  else if(rain>=9){out.push('Regelmatig regen: regenjas, regenbroek en rugzakhoes verplicht; drybag voor slaapzak.')}
-  else if(rain>=5){out.push('Enkele regenbuien mogelijk: lichte regenjas en poncho/rugzakhoes.')}
-  else{out.push('Droog seizoen: regenjas blijft mee (onweer), maar een lichte volstaat.')}
-  if(/m$/.test(r.alt)&&parseInt(r.alt.split('–')[1])>=1500){out.push('Op hoogte waait het harder en is de zon feller: windjack, zonnebril, zonnecrème SPF50, lippenbalsem.');if(m>=5&&m<=8)warns.push({t:'',s:'Onweer in de namiddag is typisch in de bergen in de zomer: vertrek vroeg en wees voor 14 u over de passen.'})}
-  if(r.danger>=3)warns.push({t:'danger',s:'Gevaarscore '+r.danger+'/5: neem kaart + kompas of GPS, een EHBO-set en laat je route achter bij iemand thuis. Overweeg een noodbaken (PLB) in afgelegen gebied.'});
-  if(r.id==='kungsleden'&&m>=5&&m<=7)out.push('Muggen: muggenhoofdnet en DEET, tent met gaas.');
-  if(r.id==='laugavegur')out.push('Rivieroversteken: watersandalen of neopreensokken, stokken.');
-  if(r.id==='fishermans')out.push('Mul zand: gaiters en hogere schoenen; extra water, weinig schaduw.');
-  return {tmin,tmax,rain,out,warns};
-}
-
-/* ---------- RENDER HOME ---------- */
-const $=s=>document.querySelector(s);
-function renderModes(){
-  $('#modes').innerHTML=MODES.map(m=>`<button class="mode ${S.mode===m.id?'on':''}" data-m="${m.id}"><span class="ic">${m.ic}</span><b>${m.name}</b><br><small>${m.sub}</small></button>`).join('');
-  document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;save();renderModes();renderList()});
-}
-function bar(v,type){const cls=type==='beauty'?'good':type==='quiet'?'neut':(v<=2?'good':v<=3?'warn':'bad');return `<div class="bar ${cls}"><i style="width:${v*20}%"></i></div>`}
-const DIFF_TXT=['','makkelijk','vrij makkelijk','gemiddeld','moeilijk','zeer moeilijk'];
-function scores(r){return `<div class="scores" style="grid-template-columns:1fr 1fr">
-  <div class="score"><b>Schoonheid ${'★'.repeat(r.beauty)}${'☆'.repeat(5-r.beauty)}</b>${bar(r.beauty,'beauty')}</div>
-  <div class="score"><b>Moeilijkheidsgraad ${r.diff}/5 · ${DIFF_TXT[r.diff]}</b>${bar(r.diff,'diff')}</div></div>`}
-function renderList(){
-  const fitRank={g:0,a:1,r:2};
-  let rs=ROUTES.filter(r=>(!S.country||r.country===S.country)&&r.days<=S.days&&r.diff<=S.diff);
-  rs=rs.map(r=>({r,c:cost(r),f:r.access[S.mode]}));
-  rs.sort((a,b)=>{
-    if(S.sort==='beauty')return b.r.beauty-a.r.beauty;
-    if(S.sort==='days')return a.r.days-b.r.days;
-    if(S.sort==='cost')return (a.c?a.c.total:1e9)-(b.c?b.c.total:1e9);
-    return fitRank[a.f]-fitRank[b.f]||(inSeason(b.r,S.month)-inSeason(a.r,S.month))||b.r.beauty-a.r.beauty;
-  });
-  updateMap(rs);
-  if(!rs.length){$('#list').innerHTML='<div class="empty">Geen routes met deze filters.</div>';return}
-  $('#list').innerHTML=rs.map(({r,c,f})=>`<div class="card route" data-id="${r.id}">
-    <div class="badge">${r.ic}</div>
-    <div class="body">
-      <h3>${r.name}</h3>
-      <div class="meta">${r.country} · ${r.km} km · ${r.days} dagen · ${r.alt}</div>
-      ${scores(r)}
-      <div class="chips" style="margin-top:8px">
-        ${inSeason(r,S.month)?'<span class="chip g">✓ seizoen in '+MONTHS[S.month]+'</span>':'<span class="chip a">buiten seizoen in '+MONTHS[S.month]+'</span>'}
-        ${r.loop?'<span class="chip b">rondtocht</span>':''}
-        ${c?'<span class="chip">± €'+Math.round(c.total)+' totaal</span>':''}
-      </div>
-      <div class="fit ${FIT_TXT[f][0]}">${FIT_TXT[f][1]}</div>
-    </div></div>`).join('');
-  document.querySelectorAll('.route').forEach(el=>el.onclick=()=>openRoute(el.dataset.id));
-}
-
-/* ---------- DETAIL ---------- */
-let current=null;
-function openRoute(id){
-  current=ROUTES.find(r=>r.id===id);
-  show('detail');renderDetail();window.scrollTo(0,0);
-}
-function renderDetail(){
-  const r=current,m=S.month,c=cost(r),a=advice(r,m),mode=MODES.find(x=>x.id===S.mode);
-  const wxLink=`https://www.windy.com/${r.lat}/${r.lon}?${r.lat},${r.lon},9`;
-  const yrLink=`https://www.yr.no/en/search?q=${encodeURIComponent(r.name.split(' (')[0].split(':')[0])}`;
-  $('#detail').innerHTML=`
-  <div class="hero"><div style="font-size:34px">${r.ic}</div><h3>${r.name}</h3><p>${r.country} · ${r.region}</p></div>
-  <div class="card">${scores(r)}<p style="margin:12px 0 0;font-size:14px;line-height:1.5">${r.desc}</p>
-    <div class="kv" style="margin-top:12px">
-      <div><span>Afstand</span>${r.km} km</div><div><span>Duur</span>${r.days} dagen</div>
-      <div><span>Hoogte</span>${r.alt}</div><div><span>Beste periode</span>${MONTHS[r.season[0]-1]} – ${MONTHS[r.season[1]-1]}</div>
-    </div></div>
-
-  <div class="card"><h2>Foto's</h2><div class="photos"><div>📷 foto's volgen</div><div>📷 foto's volgen</div><div>📷 foto's volgen</div></div><div id="dmap"></div></div>
-
-  <div class="card"><h2>Veilig starten</h2><div class="safe">
-    <b>Specifiek voor deze route</b><ol>${(SAFETY[r.id]||[]).map(s=>'<li>'+s+'</li>').join('')}</ol>
-    <b>Altijd</b><ol>${SAFE_GENERAL.map(s=>'<li>'+s+'</li>').join('')}</ol>
-  </div></div>
-
-  <div class="card"><h2>Overnachten</h2><div class="sleep">${r.sleep.map(s=>'<span class="chip">'+s+'</span>').join('')}</div></div>
-
-  <div class="card"><h2>Bereikbaarheid – ${mode.ic} ${mode.name}</h2>
-    <div class="fit ${FIT_TXT[r.access[S.mode]][0]}" style="margin:0 0 8px">${FIT_TXT[r.access[S.mode]][1]}</div>
-    <div class="modeTxt">${r.how[S.mode]}</div>
-    <div class="tabs" style="margin-top:10px">${MODES.map(x=>`<button class="tab ${S.mode===x.id?'on':''}" data-m="${x.id}">${x.ic} ${x.name}</button>`).join('')}</div>
+    <div class="block" style="display:block">
+      <h4>Over Trekpad</h4>
+      <p class="how">Trekpad helpt je een meerdaagse trektocht kiezen die past bij hoe je reist, ook zonder auto. Elke route krijgt een score voor schoonheid en moeilijkheidsgraad, tips om veilig te starten, een kostenschatting en het weer.</p>
+      <p class="note">Versie 0.3 · Foto's: Wikimedia Commons (bronvermelding bij elke foto) · Kaart: OpenStreetMap · Weer: Open-Meteo</p>
+    </div>
   </div>
+</section>
 
-  <div class="card"><h2>Kosten (schatting, ${S.people} pers.)</h2>
-    ${c?`<table>${c.lines.map(l=>`<tr><td>${l[0]}</td><td>€ ${Math.round(l[1])}</td></tr>`).join('')}<tr class="total"><td>Totaal</td><td>€ ${Math.round(c.total)}</td></tr></table>
-    <div class="big" style="margin-top:8px">€ ${Math.round(c.total/S.people)} <span style="font-size:13px;color:var(--muted);font-weight:400">per persoon</span></div>`
-    :'<p style="font-size:14px">Deze reisvorm is voor deze route niet mogelijk. Kies een andere reisvorm hierboven.</p>'}
-    ${S.mode.startsWith('fly')?`<a class="btn" href="https://www.google.com/travel/flights?q=flights%20to%20${r.airport}" target="_blank" rel="noopener">✈️ Actuele vliegprijs</a>`:''}
-    ${S.mode==='ov'?`<a class="btn" href="https://www.thetrainline.com/" target="_blank" rel="noopener">🚆 Actuele treinprijs</a>`:''}
-    ${S.mode==='car'?`<a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lon}" target="_blank" rel="noopener">🗺️ Route in Maps</a>`:''}
-    <p class="note">Pas brandstofprijs, verbruik en slaapvoorkeur aan via ⚙️. Vlieg- en treinprijzen zijn gemiddelden, geen live prijzen.</p>
-  </div>
+<nav class="nav">
+  <button data-v="home" class="on"><span>🎒</span>Ontdek</button>
+  <button data-v="map"><span>🗺️</span>Kaart</button>
+  <button data-v="settings"><span>⚙️</span>Instellingen</button>
+</nav>
 
-  <div class="card"><h2>Weer nu – komende 7 dagen</h2>
-    <div id="live"><p class="note">Weersverwachting laden…</p></div>
-  </div>
-
-  <div class="card"><h2>Klimaat & kleding per maand</h2>
-    <div class="tabs">${MONTHS.map((n,i)=>`<button class="tab ${i===m?'on':''}" data-mo="${i}">${n}</button>`).join('')}</div>
-    <div class="wx"><div><b>${a.tmin}°</b><span>nacht (gem.)</span></div><div><b>${a.tmax}°</b><span>dag (gem.)</span></div><div><b>${a.rain}</b><span>regendagen</span></div></div>
-    ${a.warns.map(w=>`<div class="warn ${w.t}">${w.s}</div>`).join('')}
-    <b style="font-size:14px;display:block;margin-top:10px">Zo kleed en bescherm je je:</b>
-    <ul class="adv">${a.out.map(x=>'<li>'+x+'</li>').join('')}</ul>
-    <a class="btn" href="${wxLink}" target="_blank" rel="noopener">🌤️ Actueel weer (Windy)</a>
-    <a class="btn" href="${yrLink}" target="_blank" rel="noopener">🌧️ Yr.no</a>
-    <p class="note">Klimaatcijfers zijn gemiddelden op routehoogte. Check altijd de verwachting vlak voor vertrek.</p>
-  </div>`;
-  document.querySelectorAll('#detail .tab[data-m]').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;save();renderDetail();renderModes();renderList()});
-  document.querySelectorAll('#detail .tab[data-mo]').forEach(b=>b.onclick=()=>{S.month=+b.dataset.mo;save();$('#fMonth').value=S.month;renderDetail();renderList()});
-  detailMap(r); liveWeather(r);
-}
-
-/* ---------- LIVE WEER (Open-Meteo, gratis, geen sleutel) ---------- */
-const WMO={0:['☀️','helder'],1:['🌤️','vrij zonnig'],2:['⛅','halfbewolkt'],3:['☁️','bewolkt'],45:['🌫️','mist'],48:['🌫️','rijp/mist'],51:['🌦️','motregen'],53:['🌦️','motregen'],55:['🌧️','motregen'],61:['🌧️','regen'],63:['🌧️','regen'],65:['🌧️','zware regen'],71:['🌨️','sneeuw'],73:['🌨️','sneeuw'],75:['❄️','zware sneeuw'],77:['🌨️','sneeuwkorrels'],80:['🌦️','buien'],81:['🌧️','buien'],82:['⛈️','zware buien'],85:['🌨️','sneeuwbuien'],86:['❄️','sneeuwbuien'],95:['⛈️','onweer'],96:['⛈️','onweer+hagel'],99:['⛈️','onweer+hagel']};
-const wxCache={};
-async function liveWeather(r){
-  const box=$('#live'); if(!box)return;
-  try{
-    let d=wxCache[r.id];
-    if(!d||Date.now()-d.t>30*60*1000){
-      const u=`https://api.open-meteo.com/v1/forecast?latitude=${r.lat}&longitude=${r.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&timezone=auto&forecast_days=7`;
-      const res=await fetch(u); if(!res.ok)throw new Error(res.status);
-      d={t:Date.now(),j:await res.json()}; wxCache[r.id]=d;
-    }
-    const dd=d.j.daily, days=['zo','ma','di','wo','do','vr','za'];
-    const tmin=Math.min(...dd.temperature_2m_min), tmax=Math.max(...dd.temperature_2m_max);
-    const rainy=dd.precipitation_sum.filter(p=>p>=1).length, wind=Math.max(...dd.wind_speed_10m_max);
-    const a=advice(r,S.month); // seizoenswaarschuwingen
-    const tips=[];
-    if(tmin<=0)tips.push('Nachtvorst verwacht: slaapzak comfort −5 °C of kouder, muts en handschoenen.');
-    else if(tmin<=6)tips.push('Koude nachten: slaapzak comfort 0 °C, warme laag voor ’s avonds.');
-    if(tmax>=26)tips.push('Warm overdag: 3 liter water, zonnehoed, start vroeg.');
-    if(rainy>=4)tips.push(`Regen op ${rainy} van de 7 dagen: volledige regenuitrusting en drybags.`);
-    else if(rainy>=1)tips.push(`Regen op ${rainy} dag(en): regenjas en rugzakhoes bovenaan.`);
-    if(wind>=50)tips.push(`Windstoten tot ${Math.round(wind)} km/u: vermijd graten en open passen op die dagen, tent goed verankeren.`);
-    const storm=dd.weather_code.some(c=>c>=95);
-    if(storm)tips.push('Onweer in de verwachting: plan die dag kort en blijf uit de hoogte in de namiddag.');
-    const snow=dd.weather_code.some(c=>c>=71&&c<=86);
-    if(snow)tips.push('Sneeuw verwacht: stokken, gaiters, eventueel micro-spikes; check of de passen open zijn.');
-    box.innerHTML=`<div class="live">${dd.time.map((t,i)=>{const w=WMO[dd.weather_code[i]]||['🌡️',''];const dt=new Date(t);return `<div><small>${days[dt.getDay()]}</small><span class="em" title="${w[1]}">${w[0]}</span><b>${Math.round(dd.temperature_2m_max[i])}°</b><small>${Math.round(dd.temperature_2m_min[i])}°</small></div>`}).join('')}</div>
-      <b style="font-size:14px;display:block">Advies voor de komende week:</b>
-      <ul class="adv">${(tips.length?tips:['Mild weer verwacht: standaard uitrusting voor dit seizoen volstaat.']).map(x=>'<li>'+x+'</li>').join('')}</ul>
-      <p class="note">Verwachting voor het startpunt (${r.lat.toFixed(2)}, ${r.lon.toFixed(2)}), op hoogte kan het 5–10 °C kouder zijn. Bron: Open-Meteo.</p>`;
-  }catch(e){
-    box.innerHTML='<p class="note">Live weer kon niet geladen worden (geen internet?). Bekijk het klimaat per maand hieronder.</p>';
-  }
-}
-
-/* ---------- KAARTEN (Leaflet + OpenStreetMap) ---------- */
-let homeMap,markers,dMap;
-function updateMap(rs){
-  if(typeof L==='undefined')return;
-  if(!homeMap){
-    homeMap=L.map('map',{scrollWheelZoom:false}).setView([54,10],3);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(homeMap);
-    markers=L.layerGroup().addTo(homeMap);
-  }
-  markers.clearLayers();
-  rs.forEach(({r,f})=>{
-    const col=f==='g'?'#2f6b4f':f==='a'?'#b7791f':'#b23a3a';
-    L.circleMarker([r.lat,r.lon],{radius:9,color:'#fff',weight:2,fillColor:col,fillOpacity:.95}).addTo(markers)
-      .bindPopup(`<b>${r.name}</b><br>${r.days} dagen · ${r.km} km<br><a href="#" onclick="openRoute('${r.id}');return false">Bekijk route →</a>`);
-  });
-}
-function detailMap(r){
-  if(typeof L==='undefined')return;
-  if(dMap){dMap.remove();dMap=null}
-  dMap=L.map('dmap',{scrollWheelZoom:false}).setView([r.lat,r.lon],9);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(dMap);
-  L.marker([r.lat,r.lon]).addTo(dMap).bindPopup('Startgebied – '+r.name);
-}
-
-/* ---------- NAV ---------- */
-function show(v){
-  ['home','detail','settings'].forEach(x=>$('#'+x).classList.toggle('hidden',x!==v));
-  $('#backBtn').classList.toggle('hidden',v==='home');
-  $('#settingsBtn').classList.toggle('hidden',v==='settings');
-  $('#title').textContent=v==='home'?'🎒 Trekpad':v==='settings'?'Instellingen':'Route';
-}
-$('#backBtn').onclick=()=>{show('home');renderList();setTimeout(()=>homeMap&&homeMap.invalidateSize(),50)};
-$('#settingsBtn').onclick=()=>show('settings');
-
-/* ---------- INIT ---------- */
-(function init(){
-  const fc=$('#fCountry');[...new Set(ROUTES.map(r=>r.country))].sort().forEach(c=>fc.add(new Option(c,c)));
-  MONTHS.forEach((n,i)=>$('#fMonth').add(new Option(n,i)));
-  Object.entries(HOMES).forEach(([k,v])=>$('#sHome').add(new Option(v.name,k)));
-  fc.value=S.country;$('#fDays').value=S.days;$('#fDiff').value=S.diff;$('#fSort').value=S.sort;$('#fMonth').value=S.month;$('#fPeople').value=S.people;
-  $('#sHome').value=S.home;$('#sFuel').value=S.fuel;$('#sCons').value=S.cons;$('#sRent').value=S.rent;$('#sFood').value=S.food;$('#sSleep').value=S.sleep;
-  const bind=(id,key,num)=>$(id).onchange=e=>{S[key]=num?+e.target.value:e.target.value;save();renderList()};
-  bind('#fCountry','country');bind('#fDays','days',1);bind('#fDiff','diff',1);bind('#fSort','sort');bind('#fMonth','month',1);bind('#fPeople','people',1);
-  bind('#sHome','home');bind('#sFuel','fuel',1);bind('#sCons','cons',1);bind('#sRent','rent',1);bind('#sFood','food',1);bind('#sSleep','sleep');
-  renderModes();renderList();
-})();
-</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/routes.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
