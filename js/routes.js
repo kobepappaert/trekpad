@@ -1,5 +1,5 @@
 /* ============================================================
-   Trekpad – routegegevens
+   Vandra – routegegevens
    Een route toevoegen: kopieer een blok, pas de velden aan.
    - beauty / diff: 1–5 (schoonheid, moeilijkheidsgraad)
    - danger: 1–5 (intern, stuurt de veiligheidswaarschuwingen)
