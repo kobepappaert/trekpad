@@ -83,7 +83,7 @@ function peaks(n){return `<span class="peaks" aria-label="${n} op 5">${[1,2,3,4,
 function steps(n){return `<span class="steps" aria-label="${n} op 5">${[1,2,3,4,5].map(i=>`<i style="height:${4+i*3}px" class="${i<=n?'on':''}"></i>`).join('')}</span>`}
 
 /* ---------- foto's: Wikimedia Commons, 5 beste per route, met bronvermelding ---------- */
-const PH='trekpad_photos_v2';let photos={};try{photos=JSON.parse(localStorage.getItem(PH)||'{}')}catch(e){}
+const PH='trekpad_photos_v3';let photos={};try{photos=JSON.parse(localStorage.getItem(PH)||'{}')}catch(e){}
 const loading={};
 async function photoSet(r){
   if(photos[r.id])return photos[r.id];
@@ -92,7 +92,7 @@ async function photoSet(r){
     let list=[];
     try{
       const q=encodeURIComponent(r.photoQuery+' -filemime:svg');
-      const u=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&gsrlimit=25&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=1400&format=json&origin=*`;
+      const u=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&gsrlimit=25&prop=imageinfo&iiprop=url|size|mime|extmetadata&iiurlwidth=1400&format=json&origin=*`;
       const j=await (await fetch(u)).json();
       const pages=Object.values((j.query||{}).pages||{});
       list=pages.map(p=>{
@@ -104,6 +104,22 @@ async function photoSet(r){
         return{url:ii.thumburl||ii.url,file:p.title.replace(/^File:/,''),artist:(md.Artist?md.Artist.value:'').replace(/<[^>]+>/g,'').trim().slice(0,50),license:md.LicenseShortName?md.LicenseShortName.value:'',score};
       }).filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,5);
     }catch(e){}
+    if(list.length<3){ // tweede poging met de Wikipedia-titel als zoekterm
+      try{
+        const q2=encodeURIComponent(r.wiki.replace(/_/g,' ')+' -filemime:svg');
+        const u2=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q2}&gsrnamespace=6&gsrlimit=25&prop=imageinfo&iiprop=url|size|mime|extmetadata&iiurlwidth=1400&format=json&origin=*`;
+        const j2=await (await fetch(u2)).json();
+        const seen=new Set(list.map(x=>x.file));
+        Object.values((j2.query||{}).pages||{}).forEach(p=>{
+          const ii=(p.imageinfo||[])[0];if(!ii)return;const md=ii.extmetadata||{},ratio=ii.width/ii.height;
+          if(!/jpeg|png/.test(ii.mime)||ii.width<1000||ratio<1.05||ratio>2.4)return;
+          const file=p.title.replace(/^File:/,'');if(seen.has(file))return;
+          const ass=(md.Assessments?md.Assessments.value:'').toLowerCase();
+          list.push({url:ii.thumburl||ii.url,file,artist:(md.Artist?md.Artist.value:'').replace(/<[^>]+>/g,'').trim().slice(0,50),license:md.LicenseShortName?md.LicenseShortName.value:'',score:(ass.includes('featured')?10:0)+(ass.includes('quality')?6:0)+(ass.includes('valued')?3:0)+Math.min(4,ii.width/1500)-1});
+        });
+        list.sort((a,b)=>b.score-a.score);list=list.slice(0,5);
+      }catch(e){}
+    }
     if(!list.length){ // fallback: hoofdfoto van het Wikipedia-artikel
       try{
         const u=`https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(r.wiki)}&prop=pageimages&piprop=thumbnail|name&pithumbsize=1400&redirects=1&format=json&origin=*`;
