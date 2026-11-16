@@ -284,34 +284,57 @@ function detailMap(r){
   if(r.stages){const pl=L.polyline(r.stages,{color:'#b23a3a',weight:4,opacity:.8,dashArray:'6 8'}).addTo(trackLayer);dMap.fitBounds(pl.getBounds().pad(.15))}
   else L.marker([r.lat,r.lon]).addTo(dMap).bindPopup(T.startArea);
 }
-/* tracé + slaapplekken uit OpenStreetMap (Overpass); etappepunten als terugval */
+/* tracé + slaapplekken uit OpenStreetMap (Overpass, met reserveservers en cache); etappepunten als terugval */
 const SLEEP_TAGS={alpine_hut:['hut','Berghut'],wilderness_hut:['hut','Schuilhut (onbemand)'],camp_site:['camp','Camping'],camp_pitch:['camp','Kampeerplek'],hostel:['bed','Hostel'],guest_house:['bed','Gastenverblijf'],chalet:['bed','Chalet']};
-const trackCache={};
 const POI_FILTER='["tourism"~"^(alpine_hut|wilderness_hut|camp_site|camp_pitch|hostel|guest_house|chalet)$"]';
+const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter'];
+const TK='vandra_tracks_v1';let trackStore={};try{trackStore=JSON.parse(localStorage.getItem(TK)||'{}')}catch(e){}
+async function overpass(q){
+  let err;
+  for(const u of OVERPASS){
+    try{const res=await fetch(u,{method:'POST',body:'data='+encodeURIComponent(q)});if(!res.ok)throw new Error(res.status);return await res.json()}catch(e){err=e}
+  }
+  throw err;
+}
+/* lijn vereenvoudigen (Douglas-Peucker) zodat cache en GPX klein blijven */
+function simplify(pts,tol){
+  if(pts.length<3)return pts;
+  const sq=(a,b,c)=>{const x=c[0]-b[0],y=c[1]-b[1];if(x===0&&y===0)return (a[0]-b[0])**2+(a[1]-b[1])**2;let t=((a[0]-b[0])*x+(a[1]-b[1])*y)/(x*x+y*y);t=Math.max(0,Math.min(1,t));return (a[0]-(b[0]+t*x))**2+(a[1]-(b[1]+t*y))**2};
+  const keep=new Array(pts.length).fill(false);keep[0]=keep[pts.length-1]=true;const stack=[[0,pts.length-1]];
+  while(stack.length){const [a,b]=stack.pop();let mx=0,mi=-1;for(let i=a+1;i<b;i++){const d=sq(pts[i],pts[a],pts[b]);if(d>mx){mx=d;mi=i}}if(mx>tol*tol){keep[mi]=true;stack.push([a,mi],[mi,b])}}
+  return pts.filter((_,i)=>keep[i]);
+}
+function bboxOf(ways){let s=90,w=180,n=-90,e=-180;ways.forEach(l=>l.forEach(p=>{if(p[0]<s)s=p[0];if(p[0]>n)n=p[0];if(p[1]<w)w=p[1];if(p[1]>e)e=p[1]}));return [s-.02,w-.03,n+.02,e+.03]}
+function nearTrack(p,ways,km){const d=km/111;for(const l of ways)for(let i=0;i<l.length;i+=3){if(Math.abs(l[i][0]-p[0])<d&&Math.abs(l[i][1]-p[1])<d*1.6)return true}return false}
 async function loadTrack(r){
   const note=$('#trackNote'),links=$('#gpxLinks');if(!note)return;
   links.innerHTML='';
   try{
-    let data=trackCache[r.id];
+    let data=trackStore[r.id];
+    if(data&&Date.now()-data.t>30*24*3600*1000)data=null;
     if(!data){
-      const d=1.6,bbox=`${r.lat-d},${r.lon-d*1.6},${r.lat+d},${r.lon+d*1.6}`;
-      let q;
-      if(r.osm){q=`[out:json][timeout:50];rel["route"="hiking"]["name"~"${r.osm}"](${bbox})->.r;(.r;rel(r.r);)->.rr;way(r.rr)(${bbox})->.w;.w out geom;nwr(around.w:1500)${POI_FILTER};out center;`}
-      else{const pts=r.stages.map(p=>p.join(',')).join(',');q=`[out:json][timeout:40];nwr(around:2500,${pts})${POI_FILTER};out center;`}
-      const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)});
-      if(!res.ok)throw new Error(res.status);
-      const j=await res.json();
-      let ways=j.elements.filter(e=>e.type==='way'&&e.geometry&&!(e.tags&&e.tags.tourism)).map(w=>w.geometry.map(p=>[p.lat,p.lon]));
-      const pois=j.elements.filter(e=>e.tags&&e.tags.tourism).map(n=>{const c=n.center||n;return{lat:c.lat,lon:c.lon,kind:SLEEP_TAGS[n.tags.tourism]||['bed','Slaapplek'],name:n.tags.name||'',tags:n.tags}}).filter(p=>p.lat);
-      const fromOsm=ways.length>0;
+      let ways=[],fromOsm=false;
+      if(r.osm){
+        const d=1.6,bbox=`${r.lat-d},${r.lon-d*1.6},${r.lat+d},${r.lon+d*1.6}`;
+        const j=await overpass(`[out:json][timeout:40];rel["route"="hiking"]["name"~"${r.osm}"](${bbox})->.r;(.r;rel(r.r);)->.rr;way(r.rr)(${bbox});out geom;`);
+        ways=j.elements.filter(e=>e.type==='way'&&e.geometry).map(w=>simplify(w.geometry.map(p=>[+p.lat.toFixed(5),+p.lon.toFixed(5)]),0.00008));
+        fromOsm=ways.length>0;
+      }
       if(!fromOsm){if(!r.stages)throw new Error('leeg');ways=[r.stages]}
-      data=trackCache[r.id]={ways,pois,fromOsm};
+      const bb=bboxOf(ways);
+      let pois=[];
+      try{
+        const j2=await overpass(`[out:json][timeout:25];nwr${POI_FILTER}(${bb.join(',')});out center;`);
+        pois=j2.elements.filter(e=>e.tags&&e.tags.tourism).map(n=>{const c=n.center||n;return{lat:c.lat,lon:c.lon,kind:SLEEP_TAGS[n.tags.tourism]||['bed','Slaapplek'],name:n.tags.name||'',web:n.tags.website||n.tags['contact:website']||'',phone:n.tags.phone||n.tags['contact:phone']||''}}).filter(p=>p.lat&&nearTrack([p.lat,p.lon],ways,fromOsm?1.5:3));
+      }catch(e){}
+      data={t:Date.now(),ways,pois,fromOsm};
+      trackStore[r.id]=data;try{localStorage.setItem(TK,JSON.stringify(trackStore))}catch(e){}
     }
     if(current!==r)return;
     trackLayer.clearLayers();
     const poly=L.polyline(data.ways,{color:'#b23a3a',weight:4,opacity:.9,dashArray:data.fromOsm?null:'6 8'}).addTo(trackLayer);
     const colors={hut:'#2e5e46',camp:'#d9a441',bed:'#5fb3a9'};
-    data.pois.forEach(p=>L.circleMarker([p.lat,p.lon],{radius:6,color:'#fff',weight:1.5,fillColor:colors[p.kind[0]],fillOpacity:1}).addTo(trackLayer).bindPopup(`<b>${p.name||p.kind[1]}</b><br>${p.kind[1]}${p.tags.website?'<br><a href="'+p.tags.website+'" target="_blank" rel="noopener">'+T.website+'</a>':''}${p.tags.phone?'<br>'+p.tags.phone:''}`));
+    data.pois.forEach(p=>L.circleMarker([p.lat,p.lon],{radius:6,color:'#fff',weight:1.5,fillColor:colors[p.kind[0]],fillOpacity:1}).addTo(trackLayer).bindPopup(`<b>${p.name||p.kind[1]}</b><br>${p.kind[1]}${p.web?'<br><a href="'+p.web+'" target="_blank" rel="noopener">'+T.website+'</a>':''}${p.phone?'<br>'+p.phone:''}`));
     dMap.fitBounds(poly.getBounds().pad(.08));
     links.innerHTML=`<button class="btn" id="dlGpx">${T.gpx}</button>`;$('#dlGpx').onclick=()=>downloadGpx(r,data);
     note.textContent=(data.fromOsm?T.trackNote:T.trackStages)+' · '+data.pois.length+' 🛏';
