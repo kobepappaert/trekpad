@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Trekpad – trektochten in Europa, met of zonder auto</title>
-<meta name="description" content="Vind een meerdaagse trektocht in Europa die bij jou past: zonder auto, met eigen auto of met het vliegtuig. Met kosten, slaapplekken, weer en kledingadvies.">
-<meta name="theme-color" content="#1f4332">
+<meta name="description" content="Vind een meerdaagse trektocht in Europa die bij jou past: zonder auto, met eigen auto of met het vliegtuig. Met GPX, slaapplekken, kosten, weer en kledingadvies.">
+<meta name="theme-color" content="#14241c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Trekpad">
@@ -13,31 +13,30 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header id="topbar">
-  <button id="back" aria-label="Terug">‹ Terug</button>
-  <h1>Trekpad <small>trektochten in Europa</small></h1>
+  <button id="back" aria-label="Terug naar overzicht">‹ Overzicht</button>
+  <a class="brand" href="./">Trekpad</a>
+  <button id="homeLink" class="homebtn">vanuit <b id="homeName"></b></button>
 </header>
 
 <section id="v-home" class="view on">
-  <div class="wrap">
-    <div class="modes" id="modes"></div>
-    <div class="bar"><span id="count"></span><button id="filterToggle">Filters</button></div>
-    <div id="filters">
-      <label class="f">Land of regio<select id="fCountry"><option value="">Alle</option></select></label>
-      <label class="f">Reismaand<select id="fMonth"></select></label>
-      <label class="f">Maximum dagen<select id="fDays"><option value="99">Alle</option><option value="4">tot 4</option><option value="7">tot 7</option><option value="10">tot 10</option><option value="15">tot 15</option></select></label>
-      <label class="f">Maximum moeilijkheid<select id="fDiff"><option value="5">Alle</option><option value="2">Makkelijk</option><option value="3">Gemiddeld</option><option value="4">Moeilijk</option></select></label>
-      <label class="f">Sorteren op<select id="fSort"><option value="fit">Beste match</option><option value="beauty">Schoonheid</option><option value="cost">Laagste kosten</option><option value="days">Kortste</option></select></label>
-      <label class="f">Personen<input type="number" id="fPeople" min="1" max="8" value="1"></label>
-    </div>
-    <div id="list"></div>
-    <footer>Gegevens zijn schattingen; controleer altijd ter plaatse. Foto's: Wikimedia Commons, kaart: OpenStreetMap, weer: Open-Meteo.</footer>
+  <div class="modes" id="modes"></div>
+  <div class="bar"><span id="count"></span><button id="filterToggle">Filters</button></div>
+  <div id="filters">
+    <label class="f">Land of regio<select id="fCountry"><option value="">Alle</option></select></label>
+    <label class="f">Reismaand<select id="fMonth"></select></label>
+    <label class="f">Maximum dagen<select id="fDays"><option value="99">Alle</option><option value="4">tot 4</option><option value="7">tot 7</option><option value="10">tot 10</option><option value="15">tot 15</option></select></label>
+    <label class="f">Maximum moeilijkheid<select id="fDiff"><option value="5">Alle</option><option value="2">Makkelijk</option><option value="3">Gemiddeld</option><option value="4">Moeilijk</option></select></label>
+    <label class="f">Sorteren op<select id="fSort"><option value="fit">Beste match</option><option value="near">Dichtstbij</option><option value="beauty">Schoonheid</option><option value="cost">Laagste kosten</option><option value="days">Kortste</option></select></label>
+    <label class="f">Personen<input type="number" id="fPeople" min="1" max="8" value="1"></label>
   </div>
+  <div id="list"></div>
+  <footer>Trekpad helpt je kiezen; ter plaatse beslis jij. Foto's: Wikimedia Commons · kaart en tracés: OpenStreetMap · weer: Open-Meteo.</footer>
 </section>
 
 <section id="v-map" class="view"><div id="map"></div></section>
@@ -46,9 +45,16 @@
 
 <section id="v-settings" class="view">
   <div class="wrap">
-    <div class="block">
-      <h4>Vertrekpunt en prijzen</h4>
-      <label class="f wide">Vertrek vanuit<select id="sHome"></select></label>
+    <section class="sec">
+      <h4>Waar vertrek je?</h4>
+      <p class="how" id="homeStatus"></p>
+      <div class="homerow"><input type="text" id="homeInput" placeholder="Stad of dorp, bv. Gent of Oslo" autocomplete="off"><button class="btn" id="homeSearch">Zoek</button></div>
+      <ul id="homeResults" class="results"></ul>
+      <button class="btn ghost" id="homeGeo">Gebruik mijn huidige locatie</button>
+      <p class="note">Afstanden, kosten en de haalbaarheid per reisvorm worden berekend vanuit dit punt.</p>
+    </section>
+    <section class="sec grid">
+      <h4>Prijzen en voorkeuren</h4>
       <label class="f">Brandstof, € per liter<input type="number" id="sFuel" step="0.01" value="1.65"></label>
       <label class="f">Verbruik, l/100 km<input type="number" id="sCons" step="0.1" value="6.5"></label>
       <label class="f">Huurauto, € per dag<input type="number" id="sRent" value="45"></label>
@@ -59,20 +65,20 @@
         <option value="hut">Berghut of refuge (±€35 per nacht)</option>
         <option value="hostel">Hostel of B&amp;B (±€40 per nacht)</option>
       </select></label>
-      <p class="note">Vlieg- en treinprijzen zijn gemiddelden. Bekijk de actuele prijs via de knoppen bij een route.</p>
-    </div>
-    <div class="block" style="display:block">
+      <p class="note wide">Vlieg- en treinprijzen zijn gemiddelden. Bekijk de actuele prijs via de knoppen bij een route.</p>
+    </section>
+    <section class="sec">
       <h4>Over Trekpad</h4>
-      <p class="how">Trekpad helpt je een meerdaagse trektocht kiezen die past bij hoe je reist, ook zonder auto. Elke route krijgt een score voor schoonheid en moeilijkheidsgraad, tips om veilig te starten, een kostenschatting en het weer.</p>
-      <p class="note">Versie 0.3 · Foto's: Wikimedia Commons (bronvermelding bij elke foto) · Kaart: OpenStreetMap · Weer: Open-Meteo</p>
-    </div>
+      <p class="how">Trekpad helpt je een meerdaagse trektocht kiezen die past bij hoe je reist, ook zonder auto. Elke route krijgt een score voor schoonheid en moeilijkheidsgraad, tips om veilig te starten, een kaart met GPX en slaapplekken, een kostenschatting en het weer.</p>
+      <p class="note">Versie 0.4 · Foto's: Wikimedia Commons, met bronvermelding per foto · Kaart, tracés en slaapplekken: © OpenStreetMap-bijdragers · Weer: Open-Meteo · Plaatsnamen: Nominatim</p>
+    </section>
   </div>
 </section>
 
 <nav class="nav">
-  <button data-v="home" class="on"><span>🎒</span>Ontdek</button>
-  <button data-v="map"><span>🗺️</span>Kaart</button>
-  <button data-v="settings"><span>⚙️</span>Instellingen</button>
+  <button data-v="home" class="on">Ontdek</button>
+  <button data-v="map">Kaart</button>
+  <button data-v="settings">Vertrek en instellingen</button>
 </nav>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

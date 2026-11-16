@@ -9,7 +9,7 @@
    - wiki: titel van het Engelse Wikipedia-artikel (voor de foto)
    ============================================================ */
 const ROUTES = [
-{id:'escapardenne',name:'Escapardenne Eislek Trail',country:'België / Luxemburg',region:'Ardennen',wiki:'Ourthe',
+{id:'escapardenne',name:'Escapardenne Eislek Trail',country:'België / Luxemburg',region:'Ardennen',wiki:'Ourthe',osm:'Escapardenne',photoQuery:'Ourthe Ardennes valley',
  km:104,days:5,beauty:3,diff:2,danger:1,lat:50.02,lon:5.92,alt:'300–500 m',season:[4,10],loop:false,
  sleep:['camping','hostel','enkele bivakzones'],access:{ov:'g',car:'g',fly:'a',flycar:'a'},
  how:{ov:'Trein Brussel → Luxemburg → Kautenbach (±3 u). Einde La Roche-en-Ardenne: bus naar Marloie, trein terug.',car:'Parkeren in Kautenbach of La Roche; terug naar de auto met trein+bus (±3 u).',fly:'Vanuit verder weg: vlieg naar Luxemburg, trein naar Kautenbach.',flycar:'Vlieg naar Luxemburg, huurauto op de luchthaven.'},
@@ -18,7 +18,7 @@ const ROUTES = [
  climate:[[-1,4,15],[-1,5,13],[1,9,14],[3,13,12],[7,17,13],[10,20,13],[12,22,12],[12,22,11],[9,18,11],[6,13,13],[2,7,15],[0,4,16]],
  safety:['Geen technische stukken; let op gladde rotsen langs de Ourthe na regen.','Drinkwater bijvullen in dorpen; beken niet ongefilterd drinken.','Weinig winkels onderweg: eten voor 2 dagen meenemen.']},
 
-{id:'hogekempen',name:'Nationaal Park Hoge Kempen',country:'België',region:'Limburg',wiki:'Hoge_Kempen_National_Park',
+{id:'hogekempen',name:'Nationaal Park Hoge Kempen',country:'België',region:'Limburg',wiki:'Hoge_Kempen_National_Park',osm:null,photoQuery:'Hoge Kempen heide',
  km:45,days:2,beauty:3,diff:1,danger:1,lat:50.98,lon:5.62,alt:'50–100 m',season:[3,11],loop:true,
  sleep:['camping','B&B','paalkampeerplaats (gratis, reserveren via Natuur en Bos)'],access:{ov:'g',car:'g',fly:'r',flycar:'r'},
  how:{ov:'Trein naar Genk, bus naar toegangspoort Kattevennen of Lieteberg. Rondtocht.',car:'Parkeren aan een toegangspoort (betalend), rondtocht.',fly:'Niet zinvol.',flycar:'Niet zinvol.'},
@@ -27,7 +27,7 @@ const ROUTES = [
  climate:[[0,5,14],[0,6,12],[2,10,13],[4,14,11],[8,19,12],[11,22,12],[13,24,11],[13,24,10],[10,20,10],[7,15,12],[3,9,14],[1,6,15]],
  safety:['Paalkampeerplaatsen: max. 2 nachten, geen vuur, reserveren verplicht.','Zandpaden: weinig schaduw in de zomer, water meenemen.','Perfecte test voor je uitrusting voor een grotere tocht.']},
 
-{id:'pieterpad',name:'Pieterpad (noordelijk deel)',country:'Nederland',region:'Groningen – Overijssel',wiki:'Pieterpad',
+{id:'pieterpad',name:'Pieterpad (noordelijk deel)',country:'Nederland',region:'Groningen – Overijssel',wiki:'Pieterpad',osm:'Pieterpad',photoQuery:'Pieterpad',
  km:240,days:12,beauty:2,diff:1,danger:1,lat:53.29,lon:6.75,alt:'0–50 m',season:[3,11],loop:false,
  sleep:['trekkershutten','campings','B&B (Vrienden op de Fiets)'],access:{ov:'g',car:'a',fly:'r',flycar:'r'},
  how:{ov:'Trein naar Groningen, bus naar Pieterburen. Elke etappe eindigt bij een bushalte of station: je kan overal in- en uitstappen.',car:'Lineair: auto staat ver weg. Beter met de trein.',fly:'Niet zinvol.',flycar:'Niet zinvol.'},
@@ -36,7 +36,7 @@ const ROUTES = [
  climate:[[0,5,14],[0,6,11],[2,9,12],[4,13,10],[8,17,11],[11,20,11],[13,22,11],[13,22,11],[10,18,11],[7,14,13],[3,9,15],[1,6,15]],
  safety:['Geen gevaren, wel blaren: tape en goede sokken.','Wind op het wad en open veld: windjack ook in de zomer.','Trekkershutten tijdig reserveren in het hoogseizoen.']},
 
-{id:'eifelsteig',name:'Eifelsteig',country:'Duitsland',region:'Eifel',wiki:'Eifelsteig',
+{id:'eifelsteig',name:'Eifelsteig',country:'Duitsland',region:'Eifel',wiki:'Eifelsteig',osm:'Eifelsteig',photoQuery:'Eifelsteig',
  km:313,days:15,beauty:3,diff:2,danger:1,lat:50.6,lon:6.5,alt:'300–700 m',season:[4,10],loop:false,
  sleep:['hostel','camping','Trekkingplätze (bivakplekken, reserveren)'],access:{ov:'g',car:'g',fly:'a',flycar:'a'},
  how:{ov:'Trein naar Aken (start Kornelimünster). Einde Trier: rechtstreekse trein terug naar Luxemburg/Brussel.',car:'Parkeren in Aken; vanuit Trier met de trein terug (±2,5 u).',fly:'Vlieg naar Keulen/Bonn of Luxemburg, verder met de trein.',flycar:'Vlieg naar Keulen/Bonn, huurauto op de luchthaven.'},
@@ -45,7 +45,7 @@ const ROUTES = [
  climate:[[-2,3,16],[-2,4,13],[0,8,14],[3,13,12],[7,17,13],[10,20,13],[12,22,12],[12,22,11],[9,18,11],[5,13,13],[2,7,15],[-1,4,16]],
  safety:['Goed bewegwijzerd. Jachtseizoen (okt–jan): blijf op de paden.','Trekkingplätze online reserveren; wildkamperen is verboden in Duitsland.','Begin met kortere etappes als 20+ km nieuw voor je is.']},
 
-{id:'malerweg',name:'Malerweg',country:'Duitsland',region:'Saksisch Zwitserland',wiki:'Malerweg',
+{id:'malerweg',name:'Malerweg',country:'Duitsland',region:'Saksisch Zwitserland',wiki:'Malerweg',osm:'Malerweg',photoQuery:'Bastei Saxon Switzerland',
  km:116,days:8,beauty:5,diff:3,danger:2,lat:50.92,lon:14.07,alt:'120–560 m',season:[4,10],loop:true,
  sleep:['pensions in elk dorp','campings','boofen (bivak onder rotsen, alleen op toegelaten plekken)'],access:{ov:'g',car:'g',fly:'g',flycar:'a'},
  how:{ov:'Trein naar Dresden (via Frankfurt, ±8 u of nachttrein), S-Bahn naar Pirna. Rondtocht langs de Elbe, S-Bahn in bijna elk dorp.',car:'±750 km. Parkeren in Pirna, rondtocht.',fly:'Vlieg naar Dresden of Berlijn, trein naar Pirna.',flycar:'Niet nodig; de S-Bahn volgt de Elbe.'},
@@ -54,7 +54,7 @@ const ROUTES = [
  climate:[[-3,2,12],[-2,4,10],[0,9,11],[3,14,10],[8,19,12],[11,22,12],[13,24,12],[13,24,11],[9,19,10],[5,13,10],[1,7,12],[-2,3,13]],
  safety:['Metalen trappen en ladders: glad bij regen, handschoenen handig.','Boofen alleen op de officieel toegelaten plekken (lijst bij het nationaal park).','Druk op de Bastei: ga er vóór 9 u heen.']},
 
-{id:'vosges',name:'GR5 Vogezen (Wissembourg – Schlucht)',country:'Frankrijk',region:'Vogezen',wiki:'Vosges',
+{id:'vosges',name:'GR5 Vogezen (Wissembourg – Schlucht)',country:'Frankrijk',region:'Vogezen',wiki:'Vosges',osm:null,photoQuery:'Hohneck Vosges',
  km:150,days:7,beauty:4,diff:3,danger:1,lat:48.6,lon:7.3,alt:'200–1300 m',season:[5,10],loop:false,
  sleep:['fermes-auberges (slapen + eten op de boerderij)','campings','refuges Club Vosgien'],access:{ov:'g',car:'g',fly:'a',flycar:'a'},
  how:{ov:'Trein Brussel → Straatsburg (2,5 u) → Wissembourg. Einde Col de la Schlucht: bus naar Munster/Colmar, trein terug.',car:'±450 km; auto in Wissembourg, terug met trein vanuit Colmar (3 u).',fly:'Vlieg naar Basel/Mulhouse of Straatsburg; trein naar Wissembourg.',flycar:'Vlieg naar Basel, huurauto; nuttig voor de wijnroute nadien.'},
@@ -63,7 +63,7 @@ const ROUTES = [
  climate:[[-3,3,14],[-3,4,12],[0,8,13],[3,13,12],[7,17,13],[10,20,13],[12,23,11],[12,22,11],[9,18,10],[5,13,12],[1,7,14],[-2,4,15]],
  safety:['Zeer goed gemarkeerd (Club Vosgien, rode rechthoek).','Fermes-auberges reserveren in het weekend.','Op de kam (Hohneck) kan het hard waaien en ’s winters sneeuwen.']},
 
-{id:'whw',name:'West Highland Way',country:'Schotland',region:'Highlands',wiki:'West_Highland_Way',
+{id:'whw',name:'West Highland Way',country:'Schotland',region:'Highlands',wiki:'West_Highland_Way',osm:'West Highland Way',photoQuery:'West Highland Way',
  km:154,days:7,beauty:4,diff:3,danger:2,lat:56.4,lon:-4.7,alt:'0–550 m',season:[4,10],loop:false,
  sleep:['wildkamperen toegelaten (Scottish Outdoor Access Code)','camping','hostel','B&B'],access:{ov:'g',car:'a',fly:'g',flycar:'a'},
  how:{ov:'Eurostar naar Londen, trein naar Glasgow (of nachttrein Caledonian Sleeper). Start Milngavie: 20 min trein vanuit Glasgow. Einde Fort William: trein terug.',car:'Lange rit incl. ferry/tunnel; terug met de trein vanuit Fort William (4 u). Weinig voordeel.',fly:'Vlieg naar Glasgow of Edinburgh, trein naar Milngavie (30 min). Perfect zonder auto.',flycar:'Weinig extra; alleen nuttig als je nadien naar de eilanden wil.'},
@@ -72,7 +72,7 @@ const ROUTES = [
  climate:[[0,6,20],[0,6,16],[1,8,17],[3,11,14],[5,14,13],[8,16,13],[10,18,14],[10,18,15],[8,15,16],[5,12,19],[2,8,19],[0,6,20]],
  safety:['Het weer wisselt per uur: regenkledij bovenaan in je rugzak.','Midges (mugjes) juni–september: hoofdnet en spray.','Oostoever Loch Lomond is rotsig en traag: korte dag plannen.','Wildkamperen: niet in de beheerzone rond Loch Lomond zonder vergunning (mrt–sep).']},
 
-{id:'skye',name:'Skye Trail',country:'Schotland',region:'Isle of Skye',wiki:'Skye_Trail',
+{id:'skye',name:'Skye Trail',country:'Schotland',region:'Isle of Skye',wiki:'Skye_Trail',osm:'Skye Trail',photoQuery:'Quiraing Skye',
  km:128,days:7,beauty:5,diff:4,danger:3,lat:57.5,lon:-6.2,alt:'0–600 m',season:[5,9],loop:false,
  sleep:['wildkamperen toegelaten','hostels in Portree/Broadford','enkele campings'],access:{ov:'a',car:'a',fly:'g',flycar:'g'},
  how:{ov:'Trein naar Glasgow, bus naar Portree (6 u), bus naar Duntulm. Bussen op het eiland rijden weinig.',car:'Zeer lang; wel handig op het eiland.',fly:'Vlieg naar Inverness of Glasgow, bus naar Portree.',flycar:'Vlieg naar Inverness, huurauto 2,5 u naar Skye. Handigste optie.'},
@@ -81,7 +81,7 @@ const ROUTES = [
  climate:[[1,7,22],[1,7,18],[2,8,19],[3,10,15],[6,13,13],[8,15,14],[10,16,15],[10,16,17],[8,14,18],[6,11,21],[3,8,21],[1,7,22]],
  safety:['Geen markering: kaart, kompas en GPS-track verplicht, en kunnen gebruiken.','Kliffen bij Trotternish: niet bij mist of storm.','Getijden tellen bij de kuststukken: getijdentabel raadplegen.','Weinig winkels: 3 dagen eten meenemen.']},
 
-{id:'c2c',name:'Coast to Coast Walk',country:'Engeland',region:'Lake District – Yorkshire',wiki:'Coast_to_Coast_Walk',
+{id:'c2c',name:'Coast to Coast Walk',country:'Engeland',region:'Lake District – Yorkshire',wiki:'Coast_to_Coast_Walk',osm:'Coast to Coast',photoQuery:'Coast to Coast Walk',
  km:309,days:14,beauty:4,diff:3,danger:2,lat:54.5,lon:-3.1,alt:'0–780 m',season:[4,10],loop:false,
  sleep:['B&B’s en pubs in elk dorp','campings','enkele hostels (YHA)'],access:{ov:'g',car:'a',fly:'g',flycar:'a'},
  how:{ov:'Eurostar Londen, trein naar Carlisle, bus naar St Bees. Einde Robin Hood’s Bay: bus naar Scarborough, trein terug.',car:'Lineair over heel Engeland; terug met trein (1 dag).',fly:'Vlieg naar Manchester, trein naar St Bees.',flycar:'Weinig nut tijdens de tocht.'},
@@ -90,7 +90,7 @@ const ROUTES = [
  climate:[[0,6,16],[0,6,13],[1,8,14],[3,11,12],[6,15,12],[9,17,12],[11,19,12],[11,19,13],[9,16,13],[6,12,15],[3,8,16],[1,6,16]],
  safety:['Lake District: mist op de toppen, navigatie nodig.','B&B’s maanden vooraf boeken in mei–september.','Bagagevervoer is mogelijk (Sherpa Van): handig voor beginners.']},
 
-{id:'pembrokeshire',name:'Pembrokeshire Coast Path (zuid)',country:'Wales',region:'Pembrokeshire',wiki:'Pembrokeshire_Coast_Path',
+{id:'pembrokeshire',name:'Pembrokeshire Coast Path (zuid)',country:'Wales',region:'Pembrokeshire',wiki:'Pembrokeshire_Coast_Path',osm:'Pembrokeshire Coast Path',photoQuery:'Pembrokeshire Coast Path',
  km:120,days:6,beauty:4,diff:2,danger:2,lat:51.7,lon:-5.1,alt:'0–150 m',season:[4,10],loop:false,
  sleep:['campings langs de kust','B&B','hostels'],access:{ov:'g',car:'a',fly:'a',flycar:'a'},
  how:{ov:'Trein naar Londen, trein naar Tenby of Pembroke; kustbussen (Puffin Shuttle) verbinden de etappes.',car:'Lang; terug met kustbus.',fly:'Vlieg naar Cardiff of Bristol, trein naar Tenby.',flycar:'Vlieg naar Bristol, huurauto 3 u.'},
@@ -99,7 +99,7 @@ const ROUTES = [
  climate:[[3,9,17],[3,9,13],[4,10,14],[5,13,11],[8,16,10],[11,18,10],[13,20,11],[13,20,12],[11,18,13],[9,15,16],[6,12,17],[4,9,17]],
  safety:['Kliffen: pad loopt soms vlak langs de rand, let op bij wind.','Getijden: enkele stranden alleen bij laag water oversteken.','Zon en wind op de kust: zonnecrème ook bij bewolking.']},
 
-{id:'kerry',name:'Kerry Way',country:'Ierland',region:'Iveragh',wiki:'Kerry_Way',
+{id:'kerry',name:'Kerry Way',country:'Ierland',region:'Iveragh',wiki:'Kerry_Way',osm:'Kerry Way',photoQuery:'Kerry Way',
  km:214,days:9,beauty:4,diff:3,danger:2,lat:52.05,lon:-9.5,alt:'0–400 m',season:[4,10],loop:true,
  sleep:['B&B’s','hostels','campings; wildkamperen gedoogd op afstand van huizen'],access:{ov:'g',car:'a',fly:'g',flycar:'a'},
  how:{ov:'Vlucht nodig vanuit het vasteland, of ferry Cherbourg–Rosslare + trein naar Killarney.',car:'Alleen via ferry (Rosslare). Rondtocht vanuit Killarney.',fly:'Vlieg naar Kerry (Farranfore) of Cork, bus/trein naar Killarney. Rondtocht.',flycar:'Vlieg naar Cork, huurauto voor de Ring of Kerry erna.'},
@@ -108,7 +108,7 @@ const ROUTES = [
  climate:[[3,9,20],[3,9,17],[4,11,17],[5,13,14],[7,15,14],[10,17,14],[12,19,15],[12,19,16],[10,17,17],[8,14,19],[5,11,20],[4,9,21]],
  safety:['Nat terrein: waterdichte schoenen en gaiters.','Veel asfaltstukken: let op verkeer, fluo-element aanbevolen.','Pubs sluiten de keuken vroeg: op tijd aankomen.']},
 
-{id:'tmb',name:'Tour du Mont Blanc',country:'Frankrijk / Italië / Zwitserland',region:'Alpen',wiki:'Tour_du_Mont_Blanc',
+{id:'tmb',name:'Tour du Mont Blanc',country:'Frankrijk / Italië / Zwitserland',region:'Alpen',wiki:'Tour_du_Mont_Blanc',osm:'Tour du Mont Blanc',photoQuery:'Tour du Mont Blanc',
  km:170,days:10,beauty:5,diff:4,danger:2,lat:45.92,lon:6.87,alt:'1000–2650 m',season:[6,9],loop:true,
  sleep:['berghutten (refuges, reserveren!)','campings in de dalen','wildkamperen beperkt'],access:{ov:'g',car:'g',fly:'g',flycar:'a'},
  how:{ov:'Trein Brussel → Parijs → Genève of Lyon, dan naar Chamonix of Les Houches (±7 u). Rondtocht.',car:'±850 km. Parkeren in Les Houches; rondtocht.',fly:'Vlieg naar Genève, shuttle-bus naar Chamonix (1,5 u).',flycar:'Vlieg naar Genève, huurauto 1 u. Niet nodig voor de tocht zelf.'},
@@ -117,7 +117,7 @@ const ROUTES = [
  climate:[[-8,-1,10],[-8,0,9],[-5,4,10],[-2,8,11],[2,13,13],[5,17,12],[8,20,11],[8,19,11],[5,16,9],[1,11,10],[-4,4,10],[-7,0,10]],
  safety:['Hutten maanden vooraf reserveren.','Sneeuwvelden op de cols tot begin juli: vraag in de hut, neem stokken.','Hoogte: eerste dag rustig, veel drinken; hoofdpijn = niet verder klimmen.','Onweer: vertrek vóór 7 u, wees vóór 14 u van de pas.']},
 
-{id:'hauteroute',name:'Walker’s Haute Route (Chamonix – Zermatt)',country:'Frankrijk / Zwitserland',region:'Walliser Alpen',wiki:'Haute_Route',
+{id:'hauteroute',name:'Walker’s Haute Route (Chamonix – Zermatt)',country:'Frankrijk / Zwitserland',region:'Walliser Alpen',wiki:'Haute_Route',osm:'Haute Route',photoQuery:'Walker\'s Haute Route',
  km:180,days:12,beauty:5,diff:5,danger:3,lat:46.05,lon:7.3,alt:'1000–2960 m',season:[7,9],loop:false,
  sleep:['SAC-hutten en refuges','campings in de dalen','hotels in de dorpen'],access:{ov:'g',car:'a',fly:'g',flycar:'r'},
  how:{ov:'Trein naar Chamonix (zie TMB). Einde Zermatt: trein naar Visp, verder naar Basel/Brussel (±8 u).',car:'Lineair; auto in Chamonix, terug met trein (5 u).',fly:'Vlieg naar Genève; einde Zermatt → Genève met de trein (4 u).',flycar:'Zermatt is autovrij; huurauto nutteloos.'},
@@ -126,7 +126,7 @@ const ROUTES = [
  climate:[[-9,-2,8],[-9,-1,7],[-6,3,8],[-3,7,9],[1,12,11],[4,16,11],[7,19,10],[7,18,10],[4,15,8],[0,10,8],[-5,3,8],[-8,-1,8]],
  safety:['Alleen na een eerdere alpiene hutten-tocht (bv. TMB).','Pas de Chèvres: ladders; Col de Riedmatten als alternatief bij angst.','Sneeuw op de hoogste passen tot half juli; stokken verplicht.','Zwitserland is duur: reken 70–90 € per hutnacht met halfpension.']},
 
-{id:'altavia1',name:'Alta Via 1',country:'Italië',region:'Dolomieten',wiki:'Alta_Via_1',
+{id:'altavia1',name:'Alta Via 1',country:'Italië',region:'Dolomieten',wiki:'Alta_Via_1',osm:'Alta Via (n\\. ?)?1\\b|Höhenweg (Nr\\. ?)?1\\b',photoQuery:'Alta Via 1 Dolomites',
  km:120,days:9,beauty:5,diff:3,danger:2,lat:46.6,lon:12.1,alt:'1200–2750 m',season:[6,9],loop:false,
  sleep:['rifugio’s (reserveren)','campings in de dalen'],access:{ov:'g',car:'a',fly:'g',flycar:'a'},
  how:{ov:'Trein naar München of Innsbruck, naar Dobbiaco, bus naar Lago di Braies. Einde Belluno: trein naar Venetië en terug.',car:'±1000 km. Auto bij Lago di Braies, terug via trein+bus (halve dag).',fly:'Vlieg naar Venetië of Innsbruck, trein/bus naar Lago di Braies (3 u).',flycar:'Vlieg naar Venetië, huurauto; nuttig voor extra bergdorpen.'},
@@ -135,7 +135,7 @@ const ROUTES = [
  climate:[[-8,0,6],[-7,1,6],[-4,5,7],[-1,9,10],[3,14,13],[6,17,14],[9,20,13],[9,19,13],[5,16,9],[1,11,8],[-4,4,8],[-7,0,6]],
  safety:['Rifugio’s reserveren vanaf juli; lakenzak meenemen.','Niet rechtstreeks naar 2500 m als je nooit hoog was.','Namiddagonweer in augustus: vroeg vertrekken.','Via ferrata-varianten zijn optioneel: neem de normale route zonder klimset.']},
 
-{id:'cinqueterre',name:'Cinque Terre – Sentiero Azzurro & hoge pad',country:'Italië',region:'Ligurië',wiki:'Cinque_Terre',
+{id:'cinqueterre',name:'Cinque Terre – Sentiero Azzurro & hoge pad',country:'Italië',region:'Ligurië',wiki:'Cinque_Terre',osm:'Sentiero Azzurro',photoQuery:'Cinque Terre trail',
  km:35,days:3,beauty:4,diff:2,danger:1,lat:44.13,lon:9.7,alt:'0–500 m',season:[3,6],loop:false,
  sleep:['hostels en B&B in de dorpen','camping in Levanto'],access:{ov:'g',car:'r',fly:'g',flycar:'r'},
  how:{ov:'Trein naar Milaan (7 u) → La Spezia → Monterosso. Trein tussen alle vijf dorpen.',car:'Dorpen zijn autovrij en parkeren is bijna onmogelijk.',fly:'Vlieg naar Pisa of Genua, trein naar Monterosso (1,5 u).',flycar:'Niet doen; parkeren onmogelijk.'},
@@ -144,7 +144,7 @@ const ROUTES = [
  climate:[[5,12,8],[5,13,7],[7,15,7],[10,18,8],[13,22,6],[17,26,4],[20,29,2],[20,29,3],[17,26,6],[13,21,9],[9,16,10],[6,13,9]],
  safety:['Sentiero Azzurro is betalend (Cinque Terre Card) en delen zijn soms gesloten na aardverschuivingen: check vooraf.','Zomer: te heet en overvol, kies lente of herfst.','Hoge paden zijn gratis, rustiger en mooier.']},
 
-{id:'gr20',name:'GR20',country:'Frankrijk (Corsica)',region:'Corsica',wiki:'GR_20',
+{id:'gr20',name:'GR20',country:'Frankrijk (Corsica)',region:'Corsica',wiki:'GR_20',osm:'GR 20',photoQuery:'GR 20 Corsica',island:true,
  km:180,days:15,beauty:5,diff:5,danger:4,lat:42.3,lon:9.05,alt:'500–2200 m',season:[6,9],loop:false,
  sleep:['refuges (tent verplicht naast hut of bed reserveren)','bivakplaats bij refuge'],access:{ov:'a',car:'r',fly:'g',flycar:'a'},
  how:{ov:'Trein naar Marseille/Nice, nachtferry naar Bastia, trein naar Calenzana via Calvi (±24 u).',car:'Alleen met ferry; auto staat 2 weken stil. Niet aanbevolen.',fly:'Vlieg naar Bastia of Calvi. Bus/taxi naar Calenzana. Einde Conca: shuttle naar Porto-Vecchio, bus naar Bastia.',flycar:'Nutteloos tijdens de tocht; alleen voor extra stranddagen.'},
@@ -153,7 +153,7 @@ const ROUTES = [
  climate:[[0,8,8],[0,8,7],[2,11,7],[4,14,8],[8,18,7],[12,23,4],[15,27,2],[15,27,2],[12,23,5],[8,17,8],[4,12,9],[1,9,9]],
  safety:['Doe eerst een andere meerdaagse bergtocht.','Reserveer refuges via het PNRC-systeem; tent verplicht zonder bed.','Kettingpassages: geen tocht bij nat weer.','3 liter water per dag; onweer in de namiddag.','Noodnummer 112; de PGHM (bergredding) kent de route.']},
 
-{id:'gr10',name:'GR10 Pyreneeën (Cauterets – Luchon)',country:'Frankrijk',region:'Hautes-Pyrénées',wiki:'GR_10',
+{id:'gr10',name:'GR10 Pyreneeën (Cauterets – Luchon)',country:'Frankrijk',region:'Hautes-Pyrénées',wiki:'GR_10',osm:null,photoQuery:'Cirque de Gavarnie',
  km:130,days:8,beauty:5,diff:4,danger:3,lat:42.88,lon:-0.1,alt:'900–2500 m',season:[6,9],loop:false,
  sleep:['refuges en gîtes d’étape','campings','bivak toegelaten boven 1 u van de weg (zonsondergang–zonsopgang)'],access:{ov:'g',car:'a',fly:'a',flycar:'a'},
  how:{ov:'TGV naar Lourdes (±6 u vanuit Parijs), bus naar Cauterets. Einde Luchon: trein naar Toulouse.',car:'±1100 km; lineair, terug met trein (halve dag).',fly:'Vlieg naar Toulouse of Pau, trein+bus naar Cauterets.',flycar:'Vlieg naar Toulouse, huurauto 2,5 u.'},
@@ -162,7 +162,7 @@ const ROUTES = [
  climate:[[-5,3,10],[-5,4,9],[-2,8,10],[0,11,12],[4,15,14],[7,19,12],[10,23,9],[10,22,9],[7,19,9],[3,13,11],[-1,7,11],[-4,4,11]],
  safety:['Hoge passen (Hourquette d’Ossoue 2734 m) kunnen tot juli sneeuw dragen.','Onweer en mist: vroeg vertrekken.','Weinig dorpen: 2–3 dagen eten meenemen.','Patou’s (kuddebeschermhonden): kalm omlopen, niet aaien.']},
 
-{id:'gr221',name:'GR221 Ruta de Pedra en Sec',country:'Spanje (Mallorca)',region:'Serra de Tramuntana',wiki:'GR_221',
+{id:'gr221',name:'GR221 Ruta de Pedra en Sec',country:'Spanje (Mallorca)',region:'Serra de Tramuntana',wiki:'GR_221',osm:'GR 221',photoQuery:'Serra de Tramuntana',island:true,
  km:90,days:6,beauty:4,diff:3,danger:2,lat:39.75,lon:2.7,alt:'0–1100 m',season:[10,5],loop:false,
  sleep:['refugis (overheidshutten, goedkoop, reserveren)','hostels in Sóller/Pollença','wildkamperen verboden'],access:{ov:'r',car:'r',fly:'g',flycar:'a'},
  how:{ov:'Alleen via vlucht (eiland); ferry vanuit Barcelona kan.',car:'Alleen via ferry; niet nodig.',fly:'Vlieg naar Palma, bus naar Port d’Andratx. Einde Pollença: bus naar Palma. Prima zonder auto.',flycar:'Handig buiten het seizoen als bussen weinig rijden.'},
@@ -171,7 +171,7 @@ const ROUTES = [
  climate:[[6,15,7],[6,15,6],[8,17,6],[10,19,6],[13,23,4],[17,27,2],[20,31,1],[20,31,2],[18,27,5],[14,23,8],[10,18,8],[7,15,8]],
  safety:['Refugis weken vooraf reserveren, zeker in het weekend.','Weinig water op de kam: 2 liter per dag minstens.','Sommige stukken lopen over privéterrein met vaste openingsuren.']},
 
-{id:'primitivo',name:'Camino Primitivo',country:'Spanje',region:'Asturië – Galicië',wiki:'Camino_Primitivo',
+{id:'primitivo',name:'Camino Primitivo',country:'Spanje',region:'Asturië – Galicië',wiki:'Camino_Primitivo',osm:'Camino Primitivo',photoQuery:'Camino Primitivo',
  km:320,days:14,beauty:4,diff:3,danger:1,lat:43.36,lon:-5.85,alt:'0–1150 m',season:[4,10],loop:false,
  sleep:['albergues (pelgrimsherbergen, 8–15 €)','pensions'],access:{ov:'a',car:'r',fly:'g',flycar:'r'},
  how:{ov:'Trein naar Parijs, nachttrein/TGV naar Hendaye, trein naar Oviedo (lang, ±20 u). Einde Santiago: trein/vlucht.',car:'Lineair over 320 km; niet handig.',fly:'Vlieg naar Oviedo/Asturias of Santiago; bus naar Oviedo. Einde Santiago: vlucht terug.',flycar:'Niet nodig.'},
@@ -180,7 +180,7 @@ const ROUTES = [
  climate:[[3,11,14],[3,12,12],[5,14,12],[6,15,13],[9,18,12],[12,21,8],[14,23,6],[14,24,6],[12,22,9],[9,18,12],[6,13,14],[4,11,14]],
  safety:['Hospitales-variant (1150 m): alleen bij goed weer, geen schuilplaats op 25 km.','Pelgrimspas (credencial) regelen voor de albergues.','Asfaltstukken: let op verkeer, fluo.']},
 
-{id:'picos',name:'Picos de Europa – Ruta del Cares & Vega de Urriellu',country:'Spanje',region:'Cantabrië – Asturië',wiki:'Picos_de_Europa',
+{id:'picos',name:'Picos de Europa – Ruta del Cares & Vega de Urriellu',country:'Spanje',region:'Cantabrië – Asturië',wiki:'Picos_de_Europa',osm:'Ruta del Cares',photoQuery:'Ruta del Cares',
  km:60,days:4,beauty:5,diff:3,danger:2,lat:43.2,lon:-4.85,alt:'200–2000 m',season:[5,10],loop:false,
  sleep:['refugios (reserveren)','hostels in Arenas de Cabrales / Poncebos','campings'],access:{ov:'a',car:'g',fly:'a',flycar:'g'},
  how:{ov:'Lang: vlucht + bus vanuit Oviedo naar Arenas de Cabrales (2 u). Bussen beperkt.',car:'±1500 km; ter plaatse handig.',fly:'Vlieg naar Oviedo of Santander; bus naar Arenas de Cabrales, taxi naar Poncebos.',flycar:'Vlieg naar Santander/Bilbao, huurauto 1,5–2 u. Beste optie.'},
@@ -189,7 +189,7 @@ const ROUTES = [
  climate:[[0,8,12],[0,9,11],[2,12,11],[3,13,12],[6,16,12],[9,20,8],[12,23,6],[12,24,6],[10,21,8],[6,16,11],[3,11,13],[1,8,13]],
  safety:['Ruta del Cares: pad met afgronden, niet voor hoogtevrees; druk in de zomer.','Mist in de Picos komt snel op: GPS en kompas.','Refugio Urriellu reserveren.']},
 
-{id:'fishermans',name:'Fishermen’s Trail (Rota Vicentina)',country:'Portugal',region:'Alentejo – Algarve',wiki:'Rota_Vicentina',
+{id:'fishermans',name:'Fishermen’s Trail (Rota Vicentina)',country:'Portugal',region:'Alentejo – Algarve',wiki:'Rota_Vicentina',osm:'Trilho dos Pescadores|Fishermen',photoQuery:'Rota Vicentina',
  km:226,days:13,beauty:4,diff:3,danger:1,lat:37.7,lon:-8.78,alt:'0–150 m',season:[10,5],loop:false,
  sleep:['hostels & guesthouses in elk dorp','campings'],access:{ov:'a',car:'a',fly:'g',flycar:'g'},
  how:{ov:'Trein naar Lissabon (2+ dagen); bus naar Porto Covo (3 u). Einde Lagos: trein naar Lissabon.',car:'±2100 km; niet realistisch.',fly:'Vlieg naar Lissabon of Faro. Bus (Rede Expressos) naar Porto Covo.',flycar:'Handig om stranden te combineren; route zelf is lineair.'},
@@ -198,7 +198,7 @@ const ROUTES = [
  climate:[[7,15,11],[8,16,10],[9,18,8],[10,19,8],[12,22,5],[15,25,2],[16,27,1],[16,27,1],[15,25,4],[13,22,8],[10,18,10],[8,15,11]],
  safety:['Hitte en geen schaduw: 3 liter water, start bij zonsopgang.','Kliffen: blijf achter de markering, de rand brokkelt af.','Mul zand: 20 km voelt als 30; plan rustdagen.']},
 
-{id:'madeira',name:'Madeira – Pico do Arieiro naar Pico Ruivo & levadas',country:'Portugal (Madeira)',region:'Madeira',wiki:'Pico_Ruivo',
+{id:'madeira',name:'Madeira – Pico do Arieiro naar Pico Ruivo & levadas',country:'Portugal (Madeira)',region:'Madeira',wiki:'Pico_Ruivo',osm:null,photoQuery:'Pico Ruivo',island:true,
  km:50,days:4,beauty:5,diff:3,danger:3,lat:32.76,lon:-16.94,alt:'600–1860 m',season:[1,12],loop:false,
  sleep:['hostels in Funchal en de dorpen','enkele campings; wildkamperen verboden'],access:{ov:'r',car:'r',fly:'g',flycar:'g'},
  how:{ov:'Eiland: alleen per vlucht.',car:'Eiland: alleen per vlucht.',fly:'Vlieg naar Funchal. Bussen naar de levada-startpunten, taxi/shuttle naar Pico do Arieiro.',flycar:'Huurauto is op Madeira het handigst (bussen rijden weinig naar de bergen).'},
@@ -207,7 +207,7 @@ const ROUTES = [
  climate:[[8,14,8],[8,14,7],[8,15,7],[9,15,6],[11,17,4],[13,20,2],[15,23,1],[15,24,1],[14,22,3],[12,19,7],[10,17,8],[9,15,9]],
  safety:['Tunnels op de graat: hoofdlamp mee.','Levada-paden: smal, soms zonder leuning, afgronden; niet bij regen.','Wolken komen snel op in de bergen: ook in de zomer een warme laag en regenjas.']},
 
-{id:'kungsleden',name:'Kungsleden (Abisko – Nikkaluokta)',country:'Zweden',region:'Lapland',wiki:'Kungsleden',
+{id:'kungsleden',name:'Kungsleden (Abisko – Nikkaluokta)',country:'Zweden',region:'Lapland',wiki:'Kungsleden',osm:'Kungsleden',photoQuery:'Kungsleden',
  km:110,days:7,beauty:5,diff:3,danger:2,lat:68.2,lon:18.8,alt:'400–1150 m',season:[7,9],loop:false,
  sleep:['STF-hutten (met sauna)','wildkamperen vrij (allemansrätt)'],access:{ov:'g',car:'r',fly:'g',flycar:'r'},
  how:{ov:'Trein naar Stockholm (via Kopenhagen, 2 dagen) en nachttrein naar Abisko Turiststation. Einde Nikkaluokta: bus naar Kiruna, trein terug.',car:'±2600 km, meerdere dagen. Niet realistisch.',fly:'Vlieg naar Kiruna (via Stockholm). Bus naar Abisko (1,5 u).',flycar:'Geen voordeel: start en einde liggen niet bij elkaar.'},
@@ -216,7 +216,7 @@ const ROUTES = [
  climate:[[-15,-8,8],[-14,-7,7],[-10,-2,7],[-5,3,7],[0,9,8],[5,15,9],[8,18,11],[7,16,11],[3,11,10],[-3,4,10],[-9,-3,9],[-13,-7,9]],
  safety:['Rivieren via bruggen of roeiboten (laat altijd één boot aan elke kant).','Bijna geen bereik: satelliet-messenger aangeraden.','Hutten zijn ’s avonds vol: tent meenemen.','Muggen in juli; nachtvorst vanaf eind augustus.']},
 
-{id:'jotunheimen',name:'Jotunheimen: Besseggen & Glitterheim',country:'Noorwegen',region:'Jotunheimen',wiki:'Besseggen',
+{id:'jotunheimen',name:'Jotunheimen: Besseggen & Glitterheim',country:'Noorwegen',region:'Jotunheimen',wiki:'Besseggen',osm:'Besseggen',photoQuery:'Besseggen',
  km:60,days:4,beauty:5,diff:4,danger:3,lat:61.5,lon:8.6,alt:'1000–1800 m (optie Galdhøpiggen 2469 m)',season:[7,9],loop:false,
  sleep:['DNT-hutten (lid worden loont)','wildkamperen vrij (allemannsretten)'],access:{ov:'g',car:'a',fly:'g',flycar:'a'},
  how:{ov:'Trein naar Oslo (via Kopenhagen/Hamburg, 1–2 dagen). Bus Valdresekspressen naar Gjendesheim (4,5 u). Terug: bus vanuit Lom.',car:'±1600 km + ferry. Auto bij Gjendesheim; terug met bus (3 u).',fly:'Vlieg naar Oslo; bus naar Gjendesheim. Goed te doen.',flycar:'Vlieg naar Oslo, huurauto 4 u. Handig voor meerdere dalen.'},
@@ -225,7 +225,7 @@ const ROUTES = [
  climate:[[-12,-5,10],[-12,-4,9],[-9,-1,9],[-5,3,8],[0,9,9],[4,14,11],[7,17,12],[6,15,12],[2,10,11],[-2,4,11],[-7,-1,10],[-11,-4,10]],
  safety:['Besseggen niet bij nat weer of harde wind; loop van Memurubu naar Gjendesheim (boot heen).','DNT-lidmaatschap: korting en sleutel voor zelfbedieningshutten.','Sneeuw blijft tot juli liggen: stokken en gaiters.','Check yr.no elke avond.']},
 
-{id:'hardangervidda',name:'Hardangervidda (Finse – Kinsarvik)',country:'Noorwegen',region:'Hardangervidda',wiki:'Hardangervidda',
+{id:'hardangervidda',name:'Hardangervidda (Finse – Kinsarvik)',country:'Noorwegen',region:'Hardangervidda',wiki:'Hardangervidda',osm:null,photoQuery:'Hardangervidda',
  km:95,days:6,beauty:4,diff:3,danger:3,lat:60.6,lon:7.5,alt:'1000–1400 m',season:[7,9],loop:false,
  sleep:['DNT-hutten','wildkamperen vrij'],access:{ov:'g',car:'a',fly:'g',flycar:'a'},
  how:{ov:'Trein Oslo – Bergen stopt in Finse (geen weg naartoe!). Einde Kinsarvik: bus naar Voss, trein.',car:'Finse is niet bereikbaar met de auto; auto in Geilo laten, trein naar Finse.',fly:'Vlieg naar Oslo of Bergen, trein naar Finse (4 u / 2,5 u).',flycar:'Weinig nut: start alleen per trein.'},
@@ -234,7 +234,7 @@ const ROUTES = [
  climate:[[-10,-4,11],[-10,-4,10],[-8,-2,10],[-5,2,9],[0,7,10],[4,12,11],[7,15,13],[6,14,14],[3,10,13],[-1,4,13],[-5,-1,12],[-9,-3,12]],
  safety:['Geen beschutting: bij storm blijf je in de hut.','Sneeuw mogelijk in elke maand; warme laag en muts altijd mee.','Rendierkuddes: afstand houden, niet storen.','Markering (rode T) kan in mist moeilijk te volgen zijn: GPS.']},
 
-{id:'lofoten',name:'Lofoten – Reinebringen, Kvalvika & Munkebu',country:'Noorwegen',region:'Lofoten',wiki:'Lofoten',
+{id:'lofoten',name:'Lofoten – Reinebringen, Kvalvika & Munkebu',country:'Noorwegen',region:'Lofoten',wiki:'Lofoten',osm:null,photoQuery:'Reinebringen',
  km:45,days:4,beauty:5,diff:3,danger:3,lat:67.95,lon:13.1,alt:'0–900 m',season:[6,9],loop:true,
  sleep:['wildkamperen vrij (niet op privégrond)','rorbuer (vissershutjes)','DNT-hut Munkebu'],access:{ov:'a',car:'a',fly:'g',flycar:'g'},
  how:{ov:'Trein naar Bodø (via Oslo–Trondheim, 2 dagen), ferry naar Moskenes. Bussen op de eilanden beperkt.',car:'±2500 km. Niet realistisch, wel handig ter plaatse.',fly:'Vlieg naar Bodø of Leknes (via Oslo). Bus langs de E10, ferry naar Moskenes.',flycar:'Vlieg naar Leknes/Bodø, huurauto: handigste manier om de wandelingen te bereiken.'},
@@ -243,7 +243,7 @@ const ROUTES = [
  climate:[[-3,2,18],[-3,2,15],[-2,3,15],[0,6,13],[4,10,11],[8,14,11],[11,17,12],[10,16,14],[7,12,16],[3,8,19],[0,5,18],[-2,3,18]],
  safety:['Steile paden met losse stenen: niet bij regen (Reinebringen heeft nu sherpa-trappen).','Weer draait snel: ook in juli muts en windjack.','Wildkamperen: minstens 150 m van huizen, geen vuur in de zomer.']},
 
-{id:'alpinepass',name:'Alpine Pass Route (Meiringen – Kandersteg)',country:'Zwitserland',region:'Berner Oberland',wiki:'Alpine_Pass_Route',
+{id:'alpinepass',name:'Alpine Pass Route (Meiringen – Kandersteg)',country:'Zwitserland',region:'Berner Oberland',wiki:'Alpine_Pass_Route',osm:'Via Alpina',photoQuery:'Via Alpina Switzerland',
  km:100,days:6,beauty:5,diff:4,danger:2,lat:46.6,lon:7.9,alt:'600–2780 m',season:[7,9],loop:false,
  sleep:['SAC-hutten en berggasthuizen','campings in de dalen','wildkamperen boven de boomgrens gedoogd'],access:{ov:'g',car:'a',fly:'g',flycar:'r'},
  how:{ov:'Trein Brussel → Basel → Interlaken → Meiringen (±7 u). Elk dal heeft een station: zeer makkelijk.',car:'±750 km. Lineair; terug met trein (2 u).',fly:'Vlieg naar Zürich of Basel, trein naar Meiringen (2 u).',flycar:'Overbodig: Zwitserse treinen gaan overal.'},
@@ -252,7 +252,7 @@ const ROUTES = [
  climate:[[-7,0,10],[-7,1,9],[-4,4,10],[-1,8,11],[3,13,13],[6,16,14],[9,19,12],[8,18,12],[5,15,10],[1,10,9],[-3,4,10],[-6,1,10]],
  safety:['Hohtürli (2778 m): steil, trappen, sneeuw tot juli.','Zwitserland is duur: 60–80 € per hutnacht; wildkamperen bespaart veel.','Treinen als nooduitgang: bij slecht weer sla je een etappe over.']},
 
-{id:'adlerweg',name:'Adlerweg (Karwendel-deel)',country:'Oostenrijk',region:'Tirol',wiki:'Adlerweg',
+{id:'adlerweg',name:'Adlerweg (Karwendel-deel)',country:'Oostenrijk',region:'Tirol',wiki:'Adlerweg',osm:'Adlerweg',photoQuery:'Karwendel Adlerweg',
  km:90,days:6,beauty:4,diff:4,danger:3,lat:47.4,lon:11.5,alt:'900–2400 m',season:[6,9],loop:false,
  sleep:['Alpenvereinshütten (reserveren)','wildkamperen verboden'],access:{ov:'g',car:'a',fly:'g',flycar:'a'},
  how:{ov:'Trein naar Innsbruck (nachttrein vanuit Brussel/Amsterdam, of via München). Bussen naar de startplaatsen.',car:'±850 km; lineair, terug met trein/bus.',fly:'Vlieg naar Innsbruck of München, trein.',flycar:'Vlieg naar München, huurauto 2 u.'},
@@ -261,7 +261,7 @@ const ROUTES = [
  climate:[[-7,0,9],[-7,1,8],[-4,5,10],[-1,9,11],[3,14,14],[6,17,15],[9,20,14],[8,19,13],[5,16,10],[1,11,9],[-3,4,9],[-6,1,10]],
  safety:['Alpenvereinslid worden: halve prijs in de hutten en verzekering voor bergredding.','Steile grasflanken: gevaarlijk bij nat weer.','Namiddagonweer in juli–augustus.']},
 
-{id:'triglav',name:'Triglav – Vallei van de Zeven Meren',country:'Slovenië',region:'Julische Alpen',wiki:'Triglav_Lakes_Valley',
+{id:'triglav',name:'Triglav – Vallei van de Zeven Meren',country:'Slovenië',region:'Julische Alpen',wiki:'Triglav_Lakes_Valley',osm:null,photoQuery:'Triglav Lakes Valley',
  km:55,days:4,beauty:5,diff:4,danger:3,lat:46.3,lon:13.8,alt:'500–2864 m',season:[6,9],loop:true,
  sleep:['berghutten (koča, reserveren in augustus)','campings in Bohinj','wildkamperen verboden in het park'],access:{ov:'g',car:'g',fly:'g',flycar:'a'},
  how:{ov:'Trein naar Ljubljana (via München/Salzburg, nachttrein), trein naar Bohinjska Bistrica, bus naar het Bohinj-meer.',car:'±1100 km. Parkeren bij het Bohinj-meer, rondtocht.',fly:'Vlieg naar Ljubljana, bus naar Bohinj (2 u).',flycar:'Vlieg naar Ljubljana, huurauto 1 u.'},
@@ -270,7 +270,7 @@ const ROUTES = [
  climate:[[-7,0,9],[-6,1,8],[-3,6,10],[0,10,12],[4,15,14],[7,18,15],[10,21,13],[9,20,13],[6,16,11],[2,11,11],[-3,4,12],[-6,0,10]],
  safety:['Triglav-top: via ferrata-stukken, klimset en helm huren; niet bij onweer.','Zonder de top is de meren-tocht technisch eenvoudig.','Hutten zijn goedkoop maar vol in augustus: reserveren.']},
 
-{id:'tatra',name:'Tatranská magistrála (Hoge Tatra)',country:'Slowakije',region:'Hoge Tatra',wiki:'Tatranská_magistrála',
+{id:'tatra',name:'Tatranská magistrála (Hoge Tatra)',country:'Slowakije',region:'Hoge Tatra',wiki:'Tatranská_magistrála',osm:'Tatranská magistrála',photoQuery:'Tatranská magistrála',
  km:46,days:4,beauty:5,diff:3,danger:3,lat:49.17,lon:20.2,alt:'1000–2000 m',season:[6,10],loop:false,
  sleep:['chaty (berghutten)','hostels in Starý Smokovec','wildkamperen verboden'],access:{ov:'g',car:'a',fly:'g',flycar:'a'},
  how:{ov:'Trein naar Wenen (nachttrein), naar Poprad-Tatry (4 u), tandradtrein naar de start. De Tatra-tram verbindt alle dorpen.',car:'±1300 km; lineair, maar de tram brengt je terug.',fly:'Vlieg naar Krakau of Poprad, bus/trein naar Starý Smokovec.',flycar:'Vlieg naar Krakau, huurauto 2 u.'},
@@ -279,7 +279,7 @@ const ROUTES = [
  climate:[[-9,-2,10],[-9,-1,9],[-5,3,10],[-1,8,11],[3,13,14],[6,16,15],[9,19,14],[8,18,13],[5,14,10],[1,9,10],[-4,2,10],[-8,-1,10]],
  safety:['Paden boven de hutten zijn gesloten van 1 nov tot 15 juni.','Beren: maak geluid, eten in de hut bewaren.','Gids verplicht voor toppen buiten de gemarkeerde paden.']},
 
-{id:'rila',name:'Rila – Zeven Meren & Musala',country:'Bulgarije',region:'Rila',wiki:'Seven_Rila_Lakes',
+{id:'rila',name:'Rila – Zeven Meren & Musala',country:'Bulgarije',region:'Rila',wiki:'Seven_Rila_Lakes',osm:null,photoQuery:'Seven Rila Lakes',
  km:60,days:5,beauty:5,diff:3,danger:2,lat:42.2,lon:23.33,alt:'1500–2925 m',season:[6,9],loop:false,
  sleep:['hizha’s (hutten, zeer goedkoop)','wildkamperen gedoogd buiten reservaten'],access:{ov:'a',car:'r',fly:'g',flycar:'a'},
  how:{ov:'Trein naar Sofia duurt 2–3 dagen. Vanuit Sofia: bus naar Sapareva Banya, kabelbaan.',car:'±2100 km; niet realistisch.',fly:'Vlieg naar Sofia (goedkoop). Bus naar Sapareva Banya (2 u), kabelbaan naar de meren. Einde Borovets: bus naar Sofia.',flycar:'Vlieg naar Sofia, huurauto 1,5 u.'},
@@ -288,7 +288,7 @@ const ROUTES = [
  climate:[[-10,-3,8],[-10,-3,8],[-7,1,9],[-3,6,10],[1,11,13],[5,15,13],[8,18,10],[8,18,9],[4,14,8],[0,9,8],[-5,3,9],[-9,-2,9]],
  safety:['Onweer boven de boomgrens: vroeg vertrekken.','Markering is goed, maar kaarten in cyrillisch: namen vooraf leren.','Hutten zijn eenvoudig: eigen eten en lakenzak.']},
 
-{id:'peaks',name:'Peaks of the Balkans',country:'Albanië / Montenegro / Kosovo',region:'Prokletije',wiki:'Peaks_of_the_Balkans',
+{id:'peaks',name:'Peaks of the Balkans',country:'Albanië / Montenegro / Kosovo',region:'Prokletije',wiki:'Peaks_of_the_Balkans',osm:'Peaks of the Balkans',photoQuery:'Theth Albania',
  km:192,days:10,beauty:5,diff:4,danger:3,lat:42.45,lon:19.85,alt:'700–2300 m',season:[6,9],loop:true,
  sleep:['guesthouses in bergdorpen (goedkoop, met eten)','wildkamperen gedoogd'],access:{ov:'r',car:'r',fly:'g',flycar:'a'},
  how:{ov:'Theoretisch via bus naar Montenegro (2+ dagen). Praktisch alleen met vlucht.',car:'±2200 km. Niet realistisch.',fly:'Vlieg naar Tirana of Podgorica. Minibus naar Shkodër, dan naar Theth (3 u). Rondtocht.',flycar:'Handig voor Albanië-roadtrip erna; weg naar Theth is bergachtig.'},
@@ -297,7 +297,7 @@ const ROUTES = [
  climate:[[-6,2,10],[-5,3,9],[-2,7,10],[2,12,11],[6,17,12],[9,21,9],[12,25,6],[12,25,6],[8,20,7],[4,14,10],[0,8,12],[-4,3,11]],
  safety:['Grensvergunning vooraf aanvragen via een lokaal agentschap.','Markering matig: GPS met de officiële GPX-track.','Herdershonden: stop, maak je niet groot, laat de herder roepen.','Weinig bereik; guesthouses via een lokale organisatie boeken.']},
 
-{id:'lycian',name:'Lycian Way (Fethiye – Kaş)',country:'Turkije',region:'Lycische kust',wiki:'Lycian_Way',
+{id:'lycian',name:'Lycian Way (Fethiye – Kaş)',country:'Turkije',region:'Lycische kust',wiki:'Lycian_Way',osm:'Likya Yolu|Lycian Way',photoQuery:'Lycian Way',
  km:150,days:9,beauty:5,diff:3,danger:2,lat:36.5,lon:29.2,alt:'0–1800 m',season:[10,5],loop:false,
  sleep:['pensions in de dorpen (goedkoop, met ontbijt)','wildkamperen toegelaten','campings aan zee'],access:{ov:'r',car:'r',fly:'g',flycar:'a'},
  how:{ov:'Niet realistisch (3+ dagen).',car:'Niet realistisch.',fly:'Vlieg naar Dalaman. Bus naar Fethiye/Ovacık. Einde Kaş: bus naar Dalaman of Antalya.',flycar:'Handig buiten het seizoen; route zelf is lineair.'},
@@ -306,7 +306,7 @@ const ROUTES = [
  climate:[[5,14,12],[5,15,10],[7,17,7],[10,21,5],[14,26,3],[18,31,1],[21,34,0],[21,34,0],[18,30,1],[14,25,5],[10,20,8],[7,16,12]],
  safety:['Zomer: 35 °C en bosbrandrisico, niet doen.','Water: bronnen zijn schaars, 3 liter meenemen.','Markering (rood-wit) verdwijnt soms: GPX-track.','Honden in dorpen: stokken helpen.']},
 
-{id:'laugavegur',name:'Laugavegur',country:'IJsland',region:'Hooglanden',wiki:'Laugavegur',
+{id:'laugavegur',name:'Laugavegur',country:'IJsland',region:'Hooglanden',wiki:'Laugavegur',osm:'Laugavegur',photoQuery:'Laugavegur',island:true,
  km:55,days:4,beauty:5,diff:3,danger:3,lat:63.95,lon:-19.2,alt:'250–1050 m',season:[7,8],loop:false,
  sleep:['hutten (ver vooraf reserveren)','campings naast de hutten'],access:{ov:'r',car:'r',fly:'g',flycar:'a'},
  how:{ov:'Niet mogelijk zonder vlucht (eiland).',car:'Niet mogelijk zonder vlucht.',fly:'Vlieg naar Keflavík. Hooglandbus Reykjavik → Landmannalaugar; einde Þórsmörk: bus terug.',flycar:'Huurauto moet een 4x4 zijn en staat 4 dagen stil. Bus is handiger.'},
