@@ -3,40 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Trekpad – trektochten in Europa, met of zonder auto</title>
-<meta name="description" content="Vind een meerdaagse trektocht in Europa die bij jou past: zonder auto, met eigen auto of met het vliegtuig. Met GPX, slaapplekken, kosten, weer en kledingadvies.">
-<meta name="theme-color" content="#14241c">
+<title>Vandra – multi-day hikes in Europe, with or without a car</title>
+<meta name="description" content="Vandra: find a multi-day hike in Europe that fits the way you travel – by train, by car or by plane. Routes with GPX, places to sleep, costs, weather and clothing advice.">
+<meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Trekpad">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Vandra">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="css/style.css?v=0.4.1">
+<link rel="stylesheet" href="css/style.css?v=0.5.0">
 </head>
 <body>
 <header id="topbar">
-  <button id="back" aria-label="Terug naar overzicht">‹ Overzicht</button>
-  <a class="brand" href="./">Trekpad</a>
-  <button id="homeLink" class="homebtn">vanuit <b id="homeName"></b></button>
+  <button id="back" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span data-t="back"></span></button>
+  <a class="brand" href="./"><svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path d="M3 25 L12 9 L18 19 L22 13 L29 25 Z" fill="#1f6b4a"/><path d="M12 9 L10 13 L12 12.5 L14 13 Z" fill="#fff"/></svg>Vandra</a>
+  <button id="homeLink" class="homebtn"><span data-t="from"></span> <b id="homeName"></b></button>
 </header>
 
 <section id="v-home" class="view on">
   <div class="modes" id="modes"></div>
-  <div class="bar"><span id="count"></span><button id="filterToggle">Filters</button></div>
+  <div class="bar"><span id="count"></span><button id="filterToggle"></button></div>
   <div id="filters">
-    <label class="f">Land of regio<select id="fCountry"><option value="">Alle</option></select></label>
-    <label class="f">Reismaand<select id="fMonth"></select></label>
-    <label class="f">Maximum dagen<select id="fDays"><option value="99">Alle</option><option value="4">tot 4</option><option value="7">tot 7</option><option value="10">tot 10</option><option value="15">tot 15</option></select></label>
-    <label class="f">Maximum moeilijkheid<select id="fDiff"><option value="5">Alle</option><option value="2">Makkelijk</option><option value="3">Gemiddeld</option><option value="4">Moeilijk</option></select></label>
-    <label class="f">Sorteren op<select id="fSort"><option value="fit">Beste match</option><option value="near">Dichtstbij</option><option value="beauty">Schoonheid</option><option value="cost">Laagste kosten</option><option value="days">Kortste</option></select></label>
-    <label class="f">Personen<input type="number" id="fPeople" min="1" max="8" value="1"></label>
+    <label class="f"><span data-t="fCountry"></span><select id="fCountry"><option value="">Alle</option></select></label>
+    <label class="f"><span data-t="fMonth"></span><select id="fMonth"></select></label>
+    <label class="f"><span data-t="fAway"></span><select id="fAway"></select></label>
+    <label class="f"><span data-t="fDiff"></span><select id="fDiff"></select></label>
+    <label class="f"><span data-t="fSort"></span><select id="fSort"></select></label>
+    <label class="f"><span data-t="fPeople"></span><input type="number" id="fPeople" min="1" max="8" value="1"></label>
   </div>
-  <div id="list"></div>
-  <footer>Trekpad helpt je kiezen; ter plaatse beslis jij. Foto's: Wikimedia Commons · kaart en tracés: OpenStreetMap · weer: Open-Meteo.</footer>
+  <div id="list" class="wrap"></div>
+  <footer><span data-t="footer"></span></footer>
 </section>
 
 <section id="v-map" class="view"><div id="map"></div></section>
@@ -46,43 +46,40 @@
 <section id="v-settings" class="view">
   <div class="wrap">
     <section class="sec">
-      <h4>Waar vertrek je?</h4>
+      <h4 data-t="home"></h4>
       <p class="how" id="homeStatus"></p>
-      <div class="homerow"><input type="text" id="homeInput" placeholder="Stad of dorp, bv. Gent of Oslo" autocomplete="off"><button class="btn" id="homeSearch">Zoek</button></div>
+      <div class="homerow"><input type="text" id="homeInput" data-tp="homePh" autocomplete="off"><button class="btn" id="homeSearch" data-t="search"></button></div>
       <ul id="homeResults" class="results"></ul>
-      <button class="btn ghost" id="homeGeo">Gebruik mijn huidige locatie</button>
-      <p class="note">Afstanden, kosten en de haalbaarheid per reisvorm worden berekend vanuit dit punt.</p>
+      <button class="btn ghost" id="homeGeo" data-t="geo"></button>
+      <p class="note" data-t="homeNote"></p>
     </section>
     <section class="sec grid">
-      <h4>Prijzen en voorkeuren</h4>
-      <label class="f">Brandstof, € per liter<input type="number" id="sFuel" step="0.01" value="1.65"></label>
-      <label class="f">Verbruik, l/100 km<input type="number" id="sCons" step="0.1" value="6.5"></label>
-      <label class="f">Huurauto, € per dag<input type="number" id="sRent" value="45"></label>
-      <label class="f">Eten, € per dag p.p.<input type="number" id="sFood" value="15"></label>
-      <label class="f wide">Hoe slaap je het liefst?<select id="sSleep">
-        <option value="wild">Wildkamperen of bivak (gratis waar toegelaten)</option>
-        <option value="camping">Camping (±€12 per nacht)</option>
-        <option value="hut">Berghut of refuge (±€35 per nacht)</option>
-        <option value="hostel">Hostel of B&amp;B (±€40 per nacht)</option>
-      </select></label>
-      <p class="note wide">Vlieg- en treinprijzen zijn gemiddelden. Bekijk de actuele prijs via de knoppen bij een route.</p>
+      <h4 data-t="prefs"></h4>
+      <label class="f"><span data-t="language"></span><select id="sLang"><option value="nl">Nederlands</option><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option></select></label>
+      <label class="f"><span data-t="fuel"></span><input type="number" id="sFuel" step="0.01" value="1.65"></label>
+      <label class="f"><span data-t="cons"></span><input type="number" id="sCons" step="0.1" value="6.5"></label>
+      <label class="f"><span data-t="rent"></span><input type="number" id="sRent" value="45"></label>
+      <label class="f"><span data-t="food"></span><input type="number" id="sFood" value="15"></label>
+      <label class="f wide"><span data-t="sleepPref"></span><select id="sSleep"></select></label>
+      <p class="note wide" data-t="prefNote"></p>
     </section>
     <section class="sec">
-      <h4>Over Trekpad</h4>
-      <p class="how">Trekpad helpt je een meerdaagse trektocht kiezen die past bij hoe je reist, ook zonder auto. Elke route krijgt een score voor schoonheid en moeilijkheidsgraad, tips om veilig te starten, een kaart met GPX en slaapplekken, een kostenschatting en het weer.</p>
-      <p class="note">Versie 0.4 · Foto's: Wikimedia Commons, met bronvermelding per foto · Kaart, tracés en slaapplekken: © OpenStreetMap-bijdragers · Weer: Open-Meteo · Plaatsnamen: Nominatim</p>
+      <h4 data-t="about"></h4>
+      <p class="how" data-t="aboutTxt"></p>
+      <p class="note" data-t="credits"></p>
     </section>
   </div>
 </section>
 
 <nav class="nav">
-  <button data-v="home" class="on">Ontdek</button>
-  <button data-v="map">Kaart</button>
-  <button data-v="settings">Vertrek en instellingen</button>
+  <button data-v="home" class="on"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 L9 8 L13 15 L16 11 L21 20 Z"/></svg><span data-t="discover"></span></button>
+  <button data-v="map"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="map"></span></button>
+  <button data-v="settings"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-t="settings"></span></button>
 </nav>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="js/routes.js?v=0.4.1"></script>
-<script src="js/app.js?v=0.4.1"></script>
+<script src="js/i18n.js?v=0.5.0"></script>
+<script src="js/routes.js?v=0.5.0"></script>
+<script src="js/app.js?v=0.5.0"></script>
 </body>
 </html>

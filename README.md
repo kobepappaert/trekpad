@@ -1,20 +1,24 @@
-# Trekpad 🎒
+# Vandra
 
-Web-app (installeerbaar op je gsm) voor meerdaagse trektochten in Europa, met of zonder auto.
-Live: https://kobepappaert.github.io/trekpad/
+Web app (installable on your phone) for multi-day hikes in Europe, with or without a car.
 
-## Wat zit erin
-- 4 reisvormen: zonder auto, eigen auto, vliegen, vliegen + huurauto → per route "goed haalbaar / omslachtig / niet realistisch"
-- Per route: schoonheid (sterren), moeilijkheidsgraad (1–5), "veilig starten", slaapplekken, kosten, weer en kledingadvies
-- Foto's van Wikimedia Commons (automatische bronvermelding), kaart van OpenStreetMap, weer van Open-Meteo
+## What it does
+- Four ways of travelling (train/bus, own car, flying, flying + rental car); only routes that are realistic from the user's own start point are shown
+- Per route: beauty and difficulty score, "starting safely" tips, places to sleep, costs, days away from home, live weather and clothing advice
+- Map with the OpenStreetMap track and huts/campsites/hostels along it, GPX download with waypoints
+- Interface in Dutch, English, French and German
 
-## Bestanden
-- `index.html` – de schil van de app
-- `css/style.css` – vormgeving
-- `js/app.js` – logica (kosten, weer, kaart, foto's)
-- `js/routes.js` – **alle routegegevens** (hier voeg je routes toe)
-- `sw.js`, `manifest.webmanifest`, `icons/` – maakt de app installeerbaar en offline bruikbaar
+## Files
+- `index.html` – app shell
+- `css/style.css` – styling
+- `js/app.js` – logic (feasibility, costs, weather, map, photos, GPX)
+- `js/routes.js` – all route data (add routes here)
+- `js/i18n.js` – interface texts per language
+- `sw.js`, `manifest.webmanifest`, `icons/` – installable, works offline
 
-## Een route toevoegen
-Open `js/routes.js`, kopieer een bestaand blok en pas aan. Het veld `wiki` is de titel van het Engelse
-Wikipedia-artikel; daaruit haalt de app automatisch de foto en de bronvermelding.
+## Adding a route
+Copy a block in `js/routes.js` and adjust. `wiki` is the English Wikipedia title (photo fallback), `photoQuery` the Wikimedia Commons search,
+`osm` the name (regex) of the hiking relation in OpenStreetMap, or `stages` a list of [lat, lon] stage points when no relation exists.
+
+## Data sources
+Photos: Wikimedia Commons (credited per photo) · Map, tracks and places to sleep: © OpenStreetMap contributors (ODbL) · Weather: Open-Meteo · Geocoding: Nominatim
