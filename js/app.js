@@ -10,6 +10,7 @@ const SAFE_GENERAL=[
 ];
 
 /* ---------- state ---------- */
+const VERSION='0.5.3';
 const LS='vandra_v1';
 const navLang=(navigator.language||'nl').slice(0,2);
 let S={lang:I18N[navLang]?navLang:'en',mode:'ov',home:{name:'Brussel, België',lat:50.85,lon:4.35},people:1,month:new Date().getMonth(),fuel:1.65,cons:6.5,rent:45,food:15,sleep:'camping',country:'',away:99,diff:5,sort:'fit'};
@@ -312,7 +313,10 @@ async function loadTrack(r){
   try{
     let data=trackStore[r.id];
     if(data&&Date.now()-data.t>30*24*3600*1000)data=null;
-    if(!data){
+    if(!data){ // vooraf berekend bestand (snel)
+      try{const res=await fetch(`data/tracks/${r.id}.json?v=${VERSION}`);if(res.ok){const j=await res.json();data={t:Date.now(),ways:j.ways,fromOsm:j.fromOsm,pois:j.pois.map(p=>({lat:p.lat,lon:p.lon,kind:[p.kind,(SLEEP_TAGS[p.type]||['bed','Slaapplek'])[1]],name:p.name,web:p.web,phone:p.phone}))}}}catch(e){}
+    }
+    if(!data){ // live uit OpenStreetMap (traag, reserve)
       let ways=[],fromOsm=false;
       if(r.osm){
         const d=1.6,bbox=`${r.lat-d},${r.lon-d*1.6},${r.lat+d},${r.lon+d*1.6}`;

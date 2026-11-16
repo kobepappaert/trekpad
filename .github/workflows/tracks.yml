@@ -1,0 +1,25 @@
+name: Build tracks
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 1 * *'   # first day of each month
+  push:
+    paths: ['js/routes.js', 'scripts/build-tracks.mjs']
+permissions:
+  contents: write
+concurrency: tracks
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: node scripts/build-tracks.mjs
+      - run: |
+          git config user.name "Vandra"
+          git config user.email "hello@vandra.app"
+          git add data/tracks
+          git diff --cached --quiet || git commit -m "Update tracks and places to sleep"
+          git push
