@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="css/style.css?v=0.5.3">
+<link rel="stylesheet" href="css/style.css?v=0.6.0">
 </head>
 <body>
 <header id="topbar">
@@ -43,6 +43,19 @@
 
 <section id="v-detail" class="view"></section>
 
+<section id="v-plus" class="view">
+  <div class="wrap">
+    <div class="plushero">
+      <p class="eyebrow" data-t="plus"></p>
+      <h2 data-t="plusTag"></h2>
+      <p class="lead" data-t="plusPitch"></p>
+    </div>
+    <ul class="benefits" id="plusBenefits"></ul>
+    <div class="pricebox"><b data-t="plusPrice"></b><button class="btn" id="plusCta" data-t="plusCta"></button><p class="note" id="plusNote" data-t="plusSoon"></p></div>
+    <section class="sec"><h4 data-t="why"></h4><div id="whyText2" class="why"></div></section>
+  </div>
+</section>
+
 <section id="v-settings" class="view">
   <div class="wrap">
     <section class="sec">
@@ -64,6 +77,15 @@
       <p class="note wide" data-t="prefNote"></p>
     </section>
     <section class="sec">
+      <h4 data-t="plus"></h4>
+      <p class="how" id="plusStatus"></p>
+      <div class="homerow"><input type="text" id="plusCode" data-tp="plusUnlock" autocomplete="off"><button class="btn ghost" id="plusApply">OK</button></div>
+    </section>
+    <section class="sec">
+      <h4 data-t="why"></h4>
+      <div id="whyText" class="why"></div>
+    </section>
+    <section class="sec">
       <h4 data-t="about"></h4>
       <p class="how" data-t="aboutTxt"></p>
       <p class="note" data-t="credits"></p>
@@ -74,12 +96,13 @@
 <nav class="nav">
   <button data-v="home" class="on"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 L9 8 L13 15 L16 11 L21 20 Z"/></svg><span data-t="discover"></span></button>
   <button data-v="map"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg><span data-t="map"></span></button>
+  <button data-v="plus"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.3l6.1-.7z"/></svg><span>Plus</span></button>
   <button data-v="settings"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-t="settings"></span></button>
 </nav>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="js/i18n.js?v=0.5.3"></script>
-<script src="js/routes.js?v=0.5.3"></script>
-<script src="js/app.js?v=0.5.3"></script>
+<script src="js/i18n.js?v=0.6.0"></script>
+<script src="js/routes.js?v=0.6.0"></script>
+<script src="js/app.js?v=0.6.0"></script>
 </body>
 </html>

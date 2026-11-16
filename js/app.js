@@ -10,10 +10,11 @@ const SAFE_GENERAL=[
 ];
 
 /* ---------- state ---------- */
-const VERSION='0.5.3';
+const VERSION='0.6.0';
+const PLUS_CODES=['VANDRA-TEST'];
 const LS='vandra_v1';
 const navLang=(navigator.language||'nl').slice(0,2);
-let S={lang:I18N[navLang]?navLang:'en',mode:'ov',home:{name:'Brussel, België',lat:50.85,lon:4.35},people:1,month:new Date().getMonth(),fuel:1.65,cons:6.5,rent:45,food:15,sleep:'camping',country:'',away:99,diff:5,sort:'fit'};
+let S={lang:I18N[navLang]?navLang:'en',mode:'ov',home:{name:'Brussel, België',lat:50.85,lon:4.35},people:1,month:new Date().getMonth(),fuel:1.65,cons:6.5,rent:45,food:15,sleep:'camping',country:'',away:99,diff:5,sort:'fit',plus:false};
 try{Object.assign(S,JSON.parse(localStorage.getItem(LS)||'{}'))}catch(e){}
 let T=I18N[S.lang];
 function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
@@ -194,6 +195,8 @@ function renderDetail(){
 
   <section class="sec"><h4>${T.sleep}</h4><ul class="tags">${r.sleep.map(s=>'<li>'+s+'</li>').join('')}</ul></section>
 
+  <section class="sec"><h4>${T.bestStays} <span class="pluslabel">Plus</span></h4><div id="stays"><p class="note">${T.loading}</p></div></section>
+
   <section class="sec"><h4>${T.getThere} ${S.home.name.split(',')[0]}</h4>
     <div class="tabs">${MODE_IDS.map(x=>`<button class="tab ${S.mode===x?'on':''}" data-m="${x}">${T.modes[x][0]}</button>`).join('')}</div>
     <p class="fit ${f} inline">${T.fit[f]} · ${km} ${T.km}</p>
@@ -340,13 +343,22 @@ async function loadTrack(r){
     const colors={hut:'#2e5e46',camp:'#d9a441',bed:'#5fb3a9'};
     data.pois.forEach(p=>L.circleMarker([p.lat,p.lon],{radius:6,color:'#fff',weight:1.5,fillColor:colors[p.kind[0]],fillOpacity:1}).addTo(trackLayer).bindPopup(`<b>${p.name||p.kind[1]}</b><br>${p.kind[1]}${p.web?'<br><a href="'+p.web+'" target="_blank" rel="noopener">'+T.website+'</a>':''}${p.phone?'<br>'+p.phone:''}`));
     dMap.fitBounds(poly.getBounds().pad(.08));
-    links.innerHTML=`<button class="btn" id="dlGpx">${T.gpx}</button>`;$('#dlGpx').onclick=()=>downloadGpx(r,data);
+    if(S.plus){links.innerHTML=`<button class="btn" id="dlGpx">${T.gpx}</button>`;$('#dlGpx').onclick=()=>downloadGpx(r,data)}
+    else links.innerHTML=`<button class="btn lock" onclick="go('plus')">🔒 ${T.gpx} · ${T.plusLocked}</button>`;
     note.textContent=(data.fromOsm?T.trackNote:T.trackStages)+' · '+data.pois.length+' 🛏';
+    renderStays(r,data);
   }catch(e){
     if(current!==r||!$('#gpxLinks'))return;
     $('#gpxLinks').innerHTML=`<button class="btn ghost" id="retryTrack">${T.retry}</button>`;$('#retryTrack').onclick=()=>loadTrack(r);
     $('#trackNote').textContent=T.trackFail;
   }
+}
+function renderStays(r,data){
+  const box=$('#stays');if(!box)return;
+  if(!S.plus){box.innerHTML=`<p class="how">${T.bestStaysTeaser}</p><button class="btn lock" onclick="go('plus')">🔒 ${T.plusLocked}</button>`;return}
+  const rank={hut:0,camp:1,bed:2};
+  const picks=data.pois.filter(p=>p.name).sort((a,b)=>rank[a.kind[0]]-rank[b.kind[0]]||(b.web?1:0)-(a.web?1:0)).slice(0,8);
+  box.innerHTML=picks.length?`<ul class="stays">${picks.map(p=>`<li><span class="dot ${p.kind[0]}"></span><b>${p.name}</b> <small>${p.kind[1]}</small>${p.web?` · <a href="${p.web}" target="_blank" rel="noopener">${T.website}</a>`:''}${p.phone?` · ${p.phone}`:''}</li>`).join('')}</ul>`:`<p class="how">${T.bestStaysTeaser}</p>`;
 }
 function downloadGpx(r,data){
   const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
@@ -387,6 +399,9 @@ function applyLang(){
   $('#fCountry').options[0].text=T.all;
   $('#filterToggle').textContent=$('#filters').classList.contains('open')?T.filtersClose:T.filters;
   $('#homeStatus').textContent=T.homeIs+' '+S.home.name;
+  $('#plusBenefits').innerHTML=T.plusBenefits.map(b=>'<li>'+b+'</li>').join('');
+  $('#whyText').innerHTML=$('#whyText2').innerHTML=T.whyText.map(t=>'<p>'+t+'</p>').join('');
+  $('#plusStatus').textContent=S.plus?T.plusActive:T.plusSoon;
   renderModes();renderList();
 }
 
@@ -404,6 +419,8 @@ function applyLang(){
   $('#back').onclick=()=>go('home');
   $('#filterToggle').onclick=()=>{$('#filters').classList.toggle('open');$('#filterToggle').textContent=$('#filters').classList.contains('open')?T.filtersClose:T.filters};
   $('#homeLink').onclick=()=>go('settings');
+  $('#plusCta').onclick=()=>{location.href='mailto:hello@vandra.app?subject=Vandra%20Plus'};
+  $('#plusApply').onclick=()=>{const c=$('#plusCode').value.trim().toUpperCase();if(PLUS_CODES.includes(c)){S.plus=true;save();$('#plusStatus').textContent=T.plusActive;$('#plusCode').value=''}else{$('#plusStatus').textContent='✗'}};
   initHome();renderList();
   if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 })();
